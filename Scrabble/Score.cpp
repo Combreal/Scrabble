@@ -29,7 +29,7 @@ CScore::~CScore(void)
 
 void CScore::SetScore(int passed_score)
 {
-	dScore = passed_score;
+	dScore = (float)passed_score;
 	theScore = dScore;
 	score = 0;
 	decade_score = 0;
@@ -39,14 +39,14 @@ void CScore::SetScore(int passed_score)
 	if(dScore>=100)
 	{
 		comp = dScore/100;
-		hundred_score = floor(comp);
+		hundred_score = floorf(comp);
 		compa = dScore - (hundred_score*100);
 		compa = compa/10;
 		decade_score = floor(compa);
 		score = compa*10 - decade_score*10;
-		Hundred_score->ScoreCrop(hundred_score);
-		Decade_score->ScoreCrop(decade_score);
-		Score->ScoreCrop(score);
+		Hundred_score->ScoreCrop((int)hundred_score);
+		Decade_score->ScoreCrop((int)decade_score);
+		Score->ScoreCrop((int)score);
 		Hundred_score->Draw();
 		Decade_score->Draw();
 		Score->Draw();
@@ -54,24 +54,24 @@ void CScore::SetScore(int passed_score)
 	else if(dScore>=10)
 	{
 		comp = dScore/10;
-		decade_score = floor(comp);
+		decade_score = floorf(comp);
 		score = dScore - decade_score*10;
-		Decade_score->ScoreCrop(decade_score);
-		Score->ScoreCrop(score);
+		Decade_score->ScoreCrop((int)decade_score);
+		Score->ScoreCrop((int)score);
 		Decade_score->Draw();
 		Score->Draw();
 	}
 	else if(dScore<10)
 	{
 		score = dScore;
-		Score->ScoreCrop(score);
+		Score->ScoreCrop((int)score);
 		Score->Draw();
 	}
 }
 
 void CScore::SetBotScore(int passed_botscore)
 {
-	dBotScore = passed_botscore;
+	dBotScore = (float)passed_botscore;
 	theBotScore = dBotScore;
 	Botscore = 0;
 	Botdecade_score = 0;
@@ -86,9 +86,9 @@ void CScore::SetBotScore(int passed_botscore)
 		Botcompa = Botcompa/10;
 		Botdecade_score = floor(Botcompa);
 		Botscore = Botcompa*10 - Botdecade_score*10;
-		BotHundred_score->ScoreCrop(Bothundred_score);
-		BotDecade_score->ScoreCrop(Botdecade_score);
-		BotScore->ScoreCrop(Botscore);
+		BotHundred_score->ScoreCrop((int)Bothundred_score);
+		BotDecade_score->ScoreCrop((int)Botdecade_score);
+		BotScore->ScoreCrop((int)Botscore);
 		BotHundred_score->Draw();
 		BotDecade_score->Draw();
 		BotScore->Draw();
@@ -98,15 +98,15 @@ void CScore::SetBotScore(int passed_botscore)
 		Botcomp = dBotScore/10;
 		Botdecade_score = floor(Botcomp);
 		Botscore = dBotScore - Botdecade_score*10;
-		BotDecade_score->ScoreCrop(Botdecade_score);
-		BotScore->ScoreCrop(Botscore);
+		BotDecade_score->ScoreCrop((int)Botdecade_score);
+		BotScore->ScoreCrop((int)Botscore);
 		BotDecade_score->Draw();
 		BotScore->Draw();
 	}
 	else if(dScore<10)
 	{
 		Botscore = dBotScore;
-		BotScore->ScoreCrop(Botscore);
+		BotScore->ScoreCrop((int)Botscore);
 		BotScore->Draw();
 	}
 }

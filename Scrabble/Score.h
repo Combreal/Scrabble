@@ -8,13 +8,13 @@ class CScore
 public:
 	CScore(CSDL_Setup* passed_csdl_setup);
 	~CScore(void);
-	int GetScore() {return theScore;}
-	int GetBotScore() {return theBotScore;}
+	int GetScore() {return (int)theScore;}
+	int GetBotScore() {return (int)theBotScore;}
 	void SetScore(int passed_score);
 	void SetBotScore(int passed_botscore);
 private:
-	int theScore, score, decade_score, hundred_score;
-	int theBotScore, Botscore, Botdecade_score, Bothundred_score;
+	float theScore, score, decade_score, hundred_score;
+	float theBotScore, Botscore, Botdecade_score, Bothundred_score;
 	float dScore, comp, compa;
 	float dBotScore, Botcomp, Botcompa;
 	CSDL_Setup* csdl_setup;

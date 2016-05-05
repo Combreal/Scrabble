@@ -12,7 +12,7 @@ public:
 	void DrawBack();
 	void GetHand();
 	void PictClicked();
-	int GetTilesNb() {return theTilesnb;}
+	int GetTilesNb() {return (int)theTilesnb;}
 	bool GetSwapOn() {return swapon;}
 	void SetTilesNb(int passed_tilesnb);
 	void SetSwapOn(bool passed_SwapOn);
@@ -31,8 +31,10 @@ private:
     int* MouseY;
 	bool *swapLoop;
 	char letter;
-	int theTilesnb, tilesnb, decade_tilesnb, deckRow, deckPillar;
-	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, timeCheck;
+	size_t timeCheck;
+	float theTilesnb, tilesnb, decade_tilesnb;
+	int deckRow, deckPillar;
+	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict;
 	int tmpTileX, tmpTileY;
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, noTileMoved;
 	float dTilesnb;

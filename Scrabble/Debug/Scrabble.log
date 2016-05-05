@@ -1,54 +1,29 @@
-﻿La génération a démarré 04/05/2016 15:02:49.
+﻿La génération a démarré 05/05/2016 13:49:38.
      1>Projet "C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Scrabble\Scrabble.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Debug\Scrabble.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Deck.cpp Dictionary.cpp Main.cpp Score.cpp Scrabble.cpp SDL_Setup.cpp Sprite.cpp Tiles.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /wd4075 /wd4098 /analyze- /errorReport:prompt Deck.cpp Dictionary.cpp Main.cpp Score.cpp Scrabble.cpp SDL_Setup.cpp Sprite.cpp Tiles.cpp
          Tiles.cpp
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(236): warning C4018: '<' : incompatibilité signed/unsigned
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(406): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(407): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(414): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(415): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\tiles.cpp(423): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
          Sprite.cpp
          SDL_Setup.cpp
          Scrabble.cpp
          Score.cpp
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(32): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(33): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(42): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(45): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(46): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(57): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(58): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(66): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(74): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(75): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(84): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(87): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(88): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(99): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(100): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-     1>c:\users\¢ombre\documents\visual studio 2010\projects\scrabble\scrabble\score.cpp(108): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
          Main.cpp
          Dictionary.cpp
          Deck.cpp
          Génération de code en cours...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib /MANIFEST /ManifestFile:"Debug\Scrabble.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.lib" /MACHINE:X86 Debug\Deck.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib /MANIFEST:NO /DEBUG /PDB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.lib" /MACHINE:X86 Debug\Deck.obj
          Debug\Dictionary.obj
          Debug\Main.obj
          Debug\Score.obj
          Debug\Scrabble.obj
          Debug\SDL_Setup.obj
          Debug\Sprite.obj
-         Debug\Tiles.obj
+         Debug\Tiles.obj  /ignore:4098
      1>Deck.obj : warning LNK4075: ' /EDITANDCONTINUE' ignoré à cause de la spécification '/INCREMENTAL:NO'
-     1>MSVCRTD.lib(cinitexe.obj) : warning LNK4098: conflit entre la bibliothèque par défaut 'msvcrt.lib' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
          Scrabble.vcxproj -> C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.exe
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.exe;#1" /manifest Debug\Scrabble.exe.intermediate.manifest
        FinalizeBuildStatus:
          Suppression du fichier "Debug\Scrabble.unsuccessfulbuild".
          Mise à jour de l'horodatage "Debug\Scrabble.lastbuildstate".
@@ -56,4 +31,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:04.56
+Temps écoulé 00:00:04.74

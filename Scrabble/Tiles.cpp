@@ -263,48 +263,6 @@ void CTiles::SetTileOnDeck(int setTx, int setTy, int tileNumber)
 			noTileMoved = false;
 		}
 	}
-	/*if((setTx >= 623 && setTx <= 661) && (setTy >= 325 && setTy <= 361) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(623,325);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 662 && setTx <= 700) && (setTy >= 325 && setTy <= 361) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(662,325);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 701 && setTx <= 739) && (setTy >= 325 && setTy <= 361) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(701,325);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 740 && setTx <= 778) && (setTy >= 325 && setTy <= 361) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(740,325);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 623 && setTx <= 661) && (setTy >= 384 && setTy <= 420) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(623,384);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 662 && setTx <= 700) && (setTy >= 384 && setTy <= 420) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(662,384);
-		handLock = true;
-		noTileMoved = false;
-	}
-	else if((setTx >= 701 && setTx <= 739) && (setTy >= 384 && setTy <= 420) && *swapLoop)
-	{
-		tiles[tileNumber]->SetPosition(701,384);
-		handLock = true;
-		noTileMoved = false;
-	}*/
 	for(int k=0;k<15;k++)
 	{
 		for(int l=0;l<15;l++)
@@ -403,7 +361,7 @@ void CTiles::SetSwapOn(bool passed_SwapOn)
 
 void CTiles::SetTilesNb(int passed_tilesnb)//all the tiles not on the deck
 {
-	dTilesnb = passed_tilesnb;
+	dTilesnb = (float)passed_tilesnb;
 	theTilesnb = dTilesnb;
 	tilesnb = 0;
 	decade_tilesnb = 0;
@@ -413,15 +371,15 @@ void CTiles::SetTilesNb(int passed_tilesnb)//all the tiles not on the deck
 		comp = dTilesnb/10;
 		decade_tilesnb = floor(comp);
 		tilesnb = dTilesnb - decade_tilesnb*10;
-		Decade_TilesNb->TilesNbCrop(decade_tilesnb);
-		TilesNb->TilesNbCrop(tilesnb);
+		Decade_TilesNb->TilesNbCrop((int)decade_tilesnb);
+		TilesNb->TilesNbCrop((int)tilesnb);
 		Decade_TilesNb->Draw();
 		TilesNb->Draw();
 	}
 	else if(dTilesnb<10)
 	{
 		tilesnb = dTilesnb;
-		TilesNb->TilesNbCrop(tilesnb);
+		TilesNb->TilesNbCrop((int)tilesnb);
 		TilesNb->Draw();
 	}
 }

@@ -4,17 +4,19 @@
 class CSprite
 {
 public:
-	CSprite(SDL_Renderer* passed_renderer, std::string FilePath, int x, int y, int w, int h, char passed_letter, int passed_points);
+	CSprite(SDL_Renderer* passed_renderer, std::string FilePath, int x, int y, int w, int h, char passed_letter, int passed_points, bool passed_isOndeck);
 	~CSprite(void);
 	void Draw();
 	void DrawSteady();
 	void SetX(int X);
 	void SetY(int Y);
+	void SetisOndeck(bool passed_IsOndeck);
 	void SetPosition(int X, int Y);
 	int GetX();
 	int GetY();
 	char GetLetter();
 	int GetPoints();
+	bool GetisOndeck() {return isOndeck;}
 	int GetWidth();
 	int GetHeight();
 	void SetWidth(int W);
@@ -30,6 +32,7 @@ private:
 	int Y_pos;
 	int points;
 	char letter;
+	bool isOndeck;
 	SDL_Texture* image;
 	SDL_Rect rect;
 	SDL_Rect crop;

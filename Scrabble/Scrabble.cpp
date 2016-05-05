@@ -1,8 +1,3 @@
-/*#pragma warning( push )
-#pragma warning( disable : 4075)
-#pragma warning( disable : 4098)
-// Your function
-#pragma warning( pop )*/
 #include "stdafx.h"
 #include "Main.h"
 

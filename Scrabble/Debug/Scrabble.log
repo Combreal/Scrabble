@@ -1,18 +1,10 @@
-﻿La génération a démarré 05/05/2016 13:49:38.
+﻿La génération a démarré 05/05/2016 21:35:23.
      1>Projet "C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Scrabble\Scrabble.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Debug\Scrabble.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /wd4075 /wd4098 /analyze- /errorReport:prompt Deck.cpp Dictionary.cpp Main.cpp Score.cpp Scrabble.cpp SDL_Setup.cpp Sprite.cpp Tiles.cpp
-         Tiles.cpp
-         Sprite.cpp
-         SDL_Setup.cpp
-         Scrabble.cpp
-         Score.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /wd4075 /wd4098 /analyze- /errorReport:prompt Main.cpp
          Main.cpp
-         Dictionary.cpp
-         Deck.cpp
-         Génération de code en cours...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib /MANIFEST:NO /DEBUG /PDB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Debug\Scrabble.lib" /MACHINE:X86 Debug\Deck.obj
          Debug\Dictionary.obj
@@ -31,4 +23,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:04.74
+Temps écoulé 00:00:00.97

@@ -14,8 +14,10 @@ public:
 	void PictClicked();
 	int GetTilesNb() {return (int)theTilesnb;}
 	bool GetSwapOn() {return swapon;}
+	bool GetPlay() {return play;}
 	void SetTilesNb(int passed_tilesnb);
 	void SetSwapOn(bool passed_SwapOn);
+	void SetPlay(bool passed_play);
 private:
 	CSprite* tiles[100];
 	CSprite* TilesNb;
@@ -35,8 +37,8 @@ private:
 	float theTilesnb, tilesnb, decade_tilesnb;
 	int deckRow, deckPillar;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict;
-	int tmpTileX, tmpTileY;
-	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, noTileMoved;
+	int tmpTileX, tmpTileY, tmpSwapedTileNb;
+	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, noTileMoved, play;
 	float dTilesnb;
 	float comp;
 };

@@ -8,12 +8,12 @@ CScore::CScore(CSDL_Setup* passed_csdl_setup)
 	theBotScore, Botscore, Botdecade_score, Bothundred_score = 0;
 	dScore = 0;
 	dBotScore = 0;
-	Score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 775, 12, 15, 25, 0, 0);
-	Decade_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 755, 12, 15, 25, 0, 0);
-	Hundred_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 735, 12, 15, 25, 0, 0);
-	BotScore = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 775, 44, 15, 25, 0, 0);
-	BotDecade_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 755, 44, 15, 25, 0, 0);
-	BotHundred_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 735, 44, 15, 25, 0, 0);
+	Score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 775, 12, 15, 25, 0, 0, 0);
+	Decade_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 755, 12, 15, 25, 0, 0, 0);
+	Hundred_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 735, 12, 15, 25, 0, 0, 0);
+	BotScore = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 775, 44, 15, 25, 0, 0, 0);
+	BotDecade_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 755, 44, 15, 25, 0, 0, 0);
+	BotHundred_score = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_18.png", 735, 44, 15, 25, 0, 0, 0);
 }
 
 

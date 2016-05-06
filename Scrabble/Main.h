@@ -2,7 +2,6 @@
 #include "SDL_Setup.h"
 #include "Sprite.h"
 #include "Tiles.h"
-#include "Score.h"
 #include "Dictionary.h"
 
 class CMain
@@ -24,6 +23,7 @@ private:
 	bool checkCheckWordSl;
 	bool onlyOne;
 	bool initHand;
+	bool blockSwap;
 	int clickSel;
 	int clickSwapSel;
 	int MouseX, MouseY;
@@ -49,7 +49,6 @@ private:
 	CSprite* Wid;
 	CSprite* Wind;
 	CTiles* Tiles;
-	CScore* Score;
 	CDictionary* Dictionary;
 };
 

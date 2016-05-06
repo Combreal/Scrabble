@@ -2,12 +2,13 @@
 using namespace std;
 
 
-CSprite::CSprite(SDL_Renderer* passed_renderer, std::string FilePath, int x, int y, int w, int h, char passed_letter, int passed_points, bool passed_isOndeck)
+CSprite::CSprite(SDL_Renderer* passed_renderer, std::string FilePath, int x, int y, int w, int h, char passed_letter, int passed_points, bool passed_isOndeck, bool passed_isOnswap)
 {
 	letter = passed_letter;
 	points = passed_points;
 	renderer = passed_renderer;
 	isOndeck = passed_isOndeck;
+	isOnswap = passed_isOnswap;
 	image = NULL;
 	image = IMG_LoadTexture(renderer, FilePath.c_str());
 	if (image == NULL)
@@ -82,6 +83,11 @@ void CSprite::SetPosition(int X, int Y)
 void CSprite::SetisOndeck(bool passed_IsOndeck)
 {
 	isOndeck = passed_IsOndeck;
+}
+
+void CSprite::SetisOnswap(bool passed_IsOnswap)
+{
+	isOnswap = passed_IsOnswap;
 }
 
 int CSprite::GetX()

@@ -35,8 +35,9 @@ private:
 	std::vector<int> Swap;
 	std::vector<int>::iterator it;
 	void WichPict();
-	void SetTileOnDeck(int setTx, int setTy, int tileNumber);
+	void SetTileOnDeck();
 	void InitSpecCase();
+	bool PackedOnDeck();
 	int* MouseX;
     int* MouseY;
 	bool *swapLoop;
@@ -44,9 +45,10 @@ private:
 	size_t timeCheck;
 	float theTilesnb, tilesnb, decade_tilesnb;
 	int deckRow, deckPillar, tileCounter;
-	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict;
+	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow;
 	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, playerScore, machineScore;
-	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, noTileMoved, play, firsttile, dreplswap, initGetHand;
+	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, initStayInDirection;
+	bool noTileMoved, play, firsttile, dreplswap, initGetHand, initPictClicked, isPackedOnDeck, direction;
 	float dTilesnb;
 	float comp;
 };

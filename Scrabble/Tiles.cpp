@@ -6,19 +6,19 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	csdl_setup = passed_SDL_Setup;
 	srand(unsigned(time(0)));
 	letter = '\0';
-	theTilesnb, tilesnb, decade_tilesnb = 0;
+	theTilesnb=0, tilesnb=0, decade_tilesnb = 0;
 	CxRelocb=0, CyRelocb=0;
 	wichpict = 0;
 	CxReloc=0, CyReloc=0;
-	deckRow, deckPillar = 0;
-	tmpTileX, tmpTileY = 0;
-	tmpPillar, tmpRow = 0;
-	tmpPrevPillar, tmpPrevRow = 0;//not sure of any use
+	deckRow=0, deckPillar = 0;
+	tmpTileX=0, tmpTileY = 0;
+	tmpPillar=0, tmpRow = 0;
+	tmpFirstPillar=0, tmpFirstRow = 0;
 	tmpSwapedTileNb = 0;
 	tmpSwap = 0;
-	stayInPillarOrRow = 0;
 	playerScore = 0;
 	machineScore = 0;
+	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	noTileMoved = true;
 	Follow=false, Lockwichpict=false, swapon=false;
 	MouseX = passed_MouseX;
@@ -35,15 +35,13 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	isClicked = false;
 	putBackTile = false;
 	handLock = false;
-	firsttileafteraturn = false;
-	direction = false;
-	directionCheck = false;
 	firsttile = true;
+	firsttileafteraturn = false;
+	secondtile = false;
+	secondtileafteraturn = false;
 	dreplswap = true;
 	initGetHand = true;
 	initPictClicked = true;
-	initStayInDirection = true;
-	stayInDirection = false;
 	Score = new CScore(csdl_setup);
 	TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 637, 95, 11, 15, '-', 0, 0, 0);
 	Decade_TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 627, 95, 11, 15, '-', 0, 0, 0);
@@ -151,7 +149,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	{
 		for(int j=0;j<15;j++)
 		{
-			Deck[i][j] = new CDeck(10+j*39, 9+i*39, i*15+j, false, 0, '\0', 0, false);//was 39before
+			Deck[i][j] = new CDeck(10+j*39, 9+i*39, i*15+j, false, 0, '\0', 0, false);
 		}
 	}
 	InitSpecCase();
@@ -186,42 +184,50 @@ void CTiles::GetHand()
 {
 	if(!initGetHand)
 	{
-		tmpPillar = 0;
-		tmpRow = 0;
-		tmpPrevPillar = 0;
-		tmpPrevRow = 0;
-		stayInPillarOrRow = 0;
-		initStayInDirection = true;
-		direction = false;
-		OnDeck.clear();
-		Swap.clear();
 		if(playAlreadyClicked)
 		{
+			tmpPillar=0, tmpRow = 0;
+			tmpFirstPillar=0, tmpFirstRow = 0;
+			tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 			firsttile = false;
+			secondtile = false;
 			firsttileafteraturn = true;
+			secondtileafteraturn = false;
 		}
 		else if(!playAlreadyClicked)
 		{
+			tmpPillar=0, tmpRow = 0;
+			tmpFirstPillar=0, tmpFirstRow = 0;
+			tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 			firsttile = true;
-			
+			secondtile = false;
+			firsttileafteraturn = false;
+			secondtileafteraturn = false;		
 		}
 		for(int i=0; i<7;i++)
 		{
 			tiles[Hand.at(i)]->SetPosition(642,134+39*i);
 			tiles[Hand.at(i)]->SetisOndeck(false);
 			tiles[Hand.at(i)]->SetisOnswap(false);
+		}
+		for(size_t h = 0, size = Hand.size(); h < size; ++h) 
+		{
 			for(int k=0;k<15;k++)
 			{
 				for(int l=0;l<15;l++)
 				{
-					if(Deck[k][l]->GetCouldBeReset())
+					if(Deck[k][l]->GetCaseNumber() == Hand.at(h))
 					{
+						Deck[k][l]->SetLetter('-');
+						Deck[k][l]->SetLetterCoefficient(0);
 						Deck[k][l]->SetOccupied(false);
 						Deck[k][l]->SetCouldBeReset(false);
 					}
 				}
 			}
 		}
+		OnDeck.clear();
+		Swap.clear();
 	}
 	else if(initGetHand)
 	{
@@ -291,15 +297,14 @@ void CTiles::Play()
 			}
 		}
 	}
-	tileCounter = tileCounter - OnDeck.size();
-	playAlreadyClicked = true;
+	tmpPillar=0, tmpRow = 0;
+	tmpFirstPillar=0, tmpFirstRow = 0;
+	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	firsttile = false;
-	initStayInDirection = true;
-	direction = false;
+	secondtile = false;
 	firsttileafteraturn = true;
-	tmpPillar = 0;
-	tmpRow = 0;
-	stayInPillarOrRow = 0;
+	secondtileafteraturn = false;
+	playAlreadyClicked = true;
 	OnDeck.clear();
 }
 
@@ -344,58 +349,48 @@ void CTiles::PictClicked()
 		if (csdl_setup->GetMainEvent()->button.button == SDL_BUTTON_LEFT)
 		{
 			WichPict();
-			//cout<<"FirstTile : "<<firsttile<<endl;
 		}
 	}
 	else if(csdl_setup->GetMainEvent()->type == SDL_MOUSEBUTTONUP && Lockwichpict)
 	{
-		if(initPictClicked)
+		SetTileOnDeck();
+		if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&!firsttile&&!firsttileafteraturn)
 		{
-			//cout<<"FirstTileAfterTurn : "<<firsttileafteraturn<<endl;
-			SetTileOnDeck();
-			//cout<<"FirstTileAfterTurn aftersettileondeck : "<<firsttileafteraturn<<endl;
-			/*cout<<"PutBackTile : "<<putBackTile<<endl;
-			cout<<"handLock : "<<handLock<<endl;
-			cout<<"Tiles-wichpict getisondeck : "<<tiles[wichpict]->GetisOndeck()<<endl;
-			cout<<"Swapon : "<<swapon<<endl;
-			cout<<"FirstTile : "<<firsttile<<endl;*/
-			if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&!firsttile&&!firsttileafteraturn)
-			{
-				tiles[wichpict]->SetPosition(Deck[deckPillar][deckRow]->GetX(),Deck[deckPillar][deckRow]->GetY());
-				tiles[wichpict]->SetisOndeck(true);
-				play = true;
-				noTileMoved =false;
-			}
-			else if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&firsttile&&!firsttileafteraturn)
-			{
-				firsttile = false;
-				tiles[wichpict]->SetPosition(283,282);
-				tiles[wichpict]->SetisOndeck(true);
-				play = true;
-				noTileMoved = false;
-			}
-			else if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&firsttileafteraturn)
-			{
-				firsttileafteraturn = false;
-				tiles[wichpict]->SetPosition(Deck[deckPillar][deckRow]->GetX(),Deck[deckPillar][deckRow]->GetY());
-				tiles[wichpict]->SetisOndeck(true);
-				play = true;
-				noTileMoved = false;
-			}
-			else if(putBackTile&&!handLock)
-			{
-				tiles[wichpict]->SetPosition(tmpTileX, tmpTileY);
-			}
-			Follow = false;
-			Lockwichpict = false;
-			putBackTile = false;
-			IsOnDeck = false;
-			handLock = false;
-			dreplswap = true;
-			isPackedOnDeck = false;
-			CxReloc=0, CyReloc=0;
-			tmpTileX, tmpTileY=0;
+			tiles[wichpict]->SetPosition(Deck[deckPillar][deckRow]->GetX(),Deck[deckPillar][deckRow]->GetY());
+			tiles[wichpict]->SetisOndeck(true);
+			play = true;
+			noTileMoved =false;
 		}
+		else if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&firsttile&&!firsttileafteraturn)
+		{
+			firsttile = false;
+			tiles[wichpict]->SetPosition(283,282);
+			tiles[wichpict]->SetisOndeck(true);
+			play = true;
+			noTileMoved = false;
+		}
+		else if(!putBackTile&&!handLock&&!tiles[wichpict]->GetisOndeck()&&!swapon&&firsttileafteraturn)
+		{
+			firsttileafteraturn = false;
+			tiles[wichpict]->SetPosition(Deck[deckPillar][deckRow]->GetX(),Deck[deckPillar][deckRow]->GetY());
+			tiles[wichpict]->SetisOndeck(true);
+			play = true;
+			noTileMoved = false;
+		}
+		else if(putBackTile&&!handLock)
+		{
+			//cout<<"Put back tile. "<<endl;
+			tiles[wichpict]->SetPosition(tmpTileX, tmpTileY);
+		}
+		Follow = false;
+		Lockwichpict = false;
+		putBackTile = false;
+		IsOnDeck = false;
+		handLock = false;
+		dreplswap = true;
+		isPackedOnDeck = false;
+		CxReloc=0, CyReloc=0;
+		tmpTileX, tmpTileY=0;
 	}
 	if (timeCheck+5 < SDL_GetTicks() && Follow && !tiles[wichpict]->GetisOndeck())
 	{
@@ -430,7 +425,7 @@ void CTiles::SetTileOnDeck()
 				}
 			}
 			Hand.at(tmpSwapedTileNb) = Hand.at(i);
-			Hand.at(i) = wichpict;//tile moved new index
+			Hand.at(i) = wichpict;//new index of the tile moved
 			tiles[Hand.at(tmpSwapedTileNb)]->SetPosition(tmpTileX, tmpTileY);
 			tiles[Hand.at(i)]->SetPosition(642,134+39*i);
 			tiles[Hand.at(tmpSwapedTileNb)]->SetisOnswap(false);
@@ -440,7 +435,6 @@ void CTiles::SetTileOnDeck()
 		}
 		else if((*MouseX >= 720 && *MouseX <= 758) && (*MouseY >= 134+39*i && *MouseY <= 171+39*i) && *swapLoop && !tiles[wichpict]->GetisOndeck()&& !tiles[wichpict]->GetisOnswap())
 		{
-			//Swap.clear();
 			for(int j=0;j<7;j++)
 			{
 				if(Hand.at(j)==wichpict)
@@ -451,7 +445,7 @@ void CTiles::SetTileOnDeck()
 			if(!tiles[Hand.at(i)]->GetisOnswap()&&!tiles[Hand.at(tmpSwapedTileNb)]->GetisOnswap())
 			{
 				Swap.push_back(wichpict);
-				tiles[wichpict]->SetPosition(720,134+39*i);//TilesNumber.at(i)
+				tiles[wichpict]->SetPosition(720,134+39*i);
 				tiles[wichpict]->SetisOnswap(true);
 				handLock = true;
 				noTileMoved = false;
@@ -462,50 +456,49 @@ void CTiles::SetTileOnDeck()
 	{
 		for(int l=0;l<15;l++)
 		{
-			if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&!firsttile&&!Deck[k][l]->GetOccupied()&&!firsttileafteraturn) //&&!Deck[k][l]->GetOccupied()  ??
-			{
-				if(PackedOnDeck())
+			if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&firsttile&&!firsttileafteraturn&&!secondtile&&!secondtileafteraturn&&!Deck[k][l]->GetOccupied())
+			{//firsttile
+				PlaceOnDeck(k, l);
+				tmpFirstPillar=k;
+				tmpFirstRow=l;
+				firsttile=false;
+				secondtile=true;
+			}
+			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&!firsttile&&!firsttileafteraturn&&secondtile&&!secondtileafteraturn&&!Deck[k][l]->GetOccupied())
+			{//secondtile
+				PackedOnDeck();
+			}
+			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&!firsttile&&firsttileafteraturn&&!secondtile&&!secondtileafteraturn&&!Deck[k][l]->GetOccupied())
+			{//firsttileafteraturn
+				PackedOnDeckSecond();
+				if(Deck[k][l-1]->GetOccupied() || Deck[k][l+1]->GetOccupied() || Deck[k-1][l]->GetOccupied() || Deck[k+1][l]->GetOccupied())
 				{
-					if((k==tmpPillar&&k==tmpPrevPillar)||(l==tmpRow&&l==tmpPrevRow))
+					tmpFirstPillar=k;
+					tmpFirstRow=l;
+					PlaceOnDeck(k, l);
+					firsttileafteraturn=false;
+					secondtileafteraturn=true;
+				}
+			}
+			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&!firsttile&&!firsttileafteraturn&&!secondtile&&secondtileafteraturn&&!Deck[k][l]->GetOccupied())
+			{//secondtileafteraturn
+				if(Deck[k][l-1]->GetOccupied() || Deck[k][l+1]->GetOccupied() || Deck[k-1][l]->GetOccupied() || Deck[k+1][l]->GetOccupied())
+				{
+					if((k==tmpLeftPillar||k==tmpRightPillar||k==tmpUpPillar||k==tmpDownPillar)||(l==tmpLeftRow||l==tmpRightRow||l==tmpUpRow||l==tmpDownRow))
 					{
-						direction = true;
-					}
-					else
-					{
-						direction = false;
-					}
-					if(initStayInDirection)
-					{
-						if((k==tmpPrevPillar||l==tmpPrevRow)&&playAlreadyClicked)
+						if(k==tmpFirstPillar||l==tmpFirstRow)
 						{
 							tmpPillar=k;
 							tmpRow=l;
 							PlaceOnDeck(k, l);
-							initStayInDirection=false;
+							secondtileafteraturn=false;
 						}
-						else if(!playAlreadyClicked)
-						{
-							tmpPillar=k;
-							tmpRow=l;
-							PlaceOnDeck(k, l);
-							initStayInDirection=false;
-						}
-					}
-					if(direction)
-					{
-						PlaceOnDeck(k, l);
 					}
 				}
 			}
-			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&firsttile&&!handLock&&!swapon)
-			{
-				PlaceOnDeck(k, l);
-				tmpPrevPillar=k;
-				tmpPrevRow=l;
-			}
-			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&firsttileafteraturn&&!handLock&&!swapon)
-			{
-				if(PackedOnDeck())
+			else if((*MouseX>=Deck[k][l]->GetX()&&*MouseX<=(Deck[k][l]->GetX()+36))&&(*MouseY>=Deck[k][l]->GetY()&&*MouseY<=(Deck[k][l]->GetY()+37))&&!handLock&&!swapon&&!firsttile&&!firsttileafteraturn&&!secondtile&&!secondtileafteraturn&&!Deck[k][l]->GetOccupied())
+			{//third tiles and beyond
+				if((k==tmpPillar&&k==tmpFirstPillar)||(l==tmpRow&&l==tmpFirstRow))
 				{
 					PlaceOnDeck(k, l);
 				}
@@ -535,7 +528,30 @@ void CTiles::PlaceOnDeck(int pillar, int row)
 	IsOnDeck=true;
 }
 
-bool CTiles::PackedOnDeck()
+void CTiles::PackedOnDeck()
+{
+	for(int i=0;i<15;i++)
+	{
+		for(int j=0;j<15;j++)
+		{
+			if((*MouseX>=Deck[i][j]->GetX()&&*MouseX<=(Deck[i][j]->GetX()+36))&&(*MouseY>=Deck[i][j]->GetY()&&*MouseY<=(Deck[i][j]->GetY()+37)))
+			{
+				if(i-1>=0 && i+1<15 && j-1>=0 && j+1<15)
+				{
+					if(Deck[i][j-1]->GetOccupied() || Deck[i][j+1]->GetOccupied() || Deck[i-1][j]->GetOccupied() || Deck[i+1][j]->GetOccupied())
+					{
+						tmpPillar=i;
+						tmpRow=j;
+						PlaceOnDeck(i, j);
+						secondtile=false;
+					}
+				}
+			}
+		}
+	}
+}
+
+void CTiles::PackedOnDeckSecond()
 {
 	for(int i=0;i<15;i++)
 	{
@@ -547,66 +563,28 @@ bool CTiles::PackedOnDeck()
 				{
 					if(Deck[i][j-1]->GetOccupied())
 					{
-						/*cout<<"j-1 : "<<Deck[i][j-1]->GetOccupied()<<endl;
-						cout<<"j+1 : "<<Deck[i][j+1]->GetOccupied()<<endl;
-						cout<<"i-1 : "<<Deck[i-1][j]->GetOccupied()<<endl;
-						cout<<"i+1 : "<<Deck[i+1][j]->GetOccupied()<<endl;
-						cout<<"Tiles Packed on Deck. "<<endl;*/
-						tmpPrevPillar=i;
-						tmpPrevRow=j-1;
-						isPackedOnDeck = true;
+						tmpLeftPillar=i;
+						tmpLeftRow=j-1;
 					}
 					else if(Deck[i][j+1]->GetOccupied())
 					{
-						tmpPrevPillar=i;
-						tmpPrevRow=j+1;
-						isPackedOnDeck = true;
+						tmpRightPillar=i;
+						tmpRightRow=j+1;
 					}
 					else if(Deck[i-1][j]->GetOccupied())
 					{
-						tmpPrevPillar=i-1;
-						tmpPrevRow=j;
-						isPackedOnDeck = true;
+						tmpUpPillar=i-1;
+						tmpUpRow=j;
 					}
 					else if(Deck[i+1][j]->GetOccupied())
 					{
-						tmpPrevPillar=i+1;
-						tmpPrevRow=j;
-						isPackedOnDeck = true;
-					}
-				}
-				else if(i-1<0)
-				{
-					if(Deck[i][j-1]->GetOccupied()||Deck[i][j+1]->GetOccupied()||Deck[i+1][j]->GetOccupied())
-					{
-						isPackedOnDeck = true;
-					}
-				}
-				else if(i+1>14)//bottom line
-				{
-					if(Deck[i][j-1]->GetOccupied()||Deck[i][j+1]->GetOccupied()||Deck[i-1][j]->GetOccupied())
-					{
-						isPackedOnDeck = true;
-					}
-				}
-				else if(j-1<0)
-				{
-					if(Deck[i][j+1]->GetOccupied()||Deck[i-1][j]->GetOccupied()||Deck[i+1][j]->GetOccupied())
-					{
-						isPackedOnDeck = true;
-					}
-				}
-				else if(j+1>14)
-				{
-					if(Deck[i][j-1]->GetOccupied()||Deck[i-1][j]->GetOccupied()||Deck[i+1][j]->GetOccupied())
-					{
-						isPackedOnDeck = true;
+						tmpDownPillar=i+1;
+						tmpDownRow=j;
 					}
 				}
 			}
 		}
 	}
-	return isPackedOnDeck;
 }
 
 void CTiles::InitSpecCase()
@@ -649,7 +627,6 @@ void CTiles::InitSpecCase()
 			}
 		}
 	}
-	//if(((m*15+n)==3)||((m*15+n)==11))
 }
 
 void CTiles::WichPict()
@@ -665,11 +642,6 @@ void CTiles::WichPict()
 			Follow = true;
 		}
 	}
-}
-
-void CTiles::SetSwapOn(bool passed_SwapOn)
-{
-	swapon=passed_SwapOn;
 }
 
 void CTiles::TilesCounter()
@@ -695,6 +667,11 @@ void CTiles::TilesCounter()
 		TilesNb->TilesNbCrop((int)tilesnb);
 		TilesNb->Draw();
 	}
+}
+
+void CTiles::SetSwapOn(bool passed_SwapOn)
+{
+	swapon=passed_SwapOn;
 }
 
 void CTiles::SetPlay(bool passed_play)

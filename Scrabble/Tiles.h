@@ -14,14 +14,17 @@ public:
 	void GetHand();
 	void PictClicked();
 	void Swapy();
+	void Play();
 	int GetTilesNb() {return (int)theTilesnb;}
 	bool GetSwapOn() {return swapon;}
 	bool GetPlay() {return play;}
 	bool GetFirstTile() {return firsttile;}
+	bool GetPlayClicked() {return playAlreadyClicked;}
 	void TilesCounter();
 	void SetSwapOn(bool passed_SwapOn);
 	void SetPlay(bool passed_play);
 	void SetFirstTile(bool passed_FirstTile);
+	void SetFirstTileAfteraTurn(bool passed_FirstTileAfteraTurn);
 private:
 	CScore* Score;
 	CSprite* tiles[100];
@@ -33,10 +36,13 @@ private:
 	std::vector<int> TilesNumberb;
 	std::vector<int> Hand;
 	std::vector<int> Swap;
+	std::vector<int> OnDeck;
+	std::vector<int> OnDeckForeva;
 	std::vector<int>::iterator it;
 	void WichPict();
 	void SetTileOnDeck();
 	void InitSpecCase();
+	void PlaceOnDeck(int pillar, int row);
 	bool PackedOnDeck();
 	int* MouseX;
     int* MouseY;
@@ -46,9 +52,9 @@ private:
 	float theTilesnb, tilesnb, decade_tilesnb;
 	int deckRow, deckPillar, tileCounter;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow;
-	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, playerScore, machineScore;
-	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, initStayInDirection;
-	bool noTileMoved, play, firsttile, dreplswap, initGetHand, initPictClicked, isPackedOnDeck, direction;
+	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, playerScore, machineScore, tmpPrevPillar, tmpPrevRow;
+	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, initStayInDirection, playAlreadyClicked, directionCheck;
+	bool noTileMoved, play, firsttile, dreplswap, initGetHand, initPictClicked, isPackedOnDeck, direction, firsttileafteraturn, stayInDirection;
 	float dTilesnb;
 	float comp;
 };

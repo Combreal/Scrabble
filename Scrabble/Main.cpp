@@ -192,7 +192,14 @@ void CMain::SelPoffLoff()
 				Undo2->Draw();
 				Play->Draw();
 				Tiles->SetPlay(false);
-				Tiles->SetFirstTile(true);
+				if(!Tiles->GetPlayClicked())
+				{
+					Tiles->SetFirstTile(true);
+				}
+				else if(Tiles->GetPlayClicked())
+				{
+					Tiles->SetFirstTileAfteraTurn(true);
+				}
 				Tiles->GetHand();
 				csdl_setup->End();
 				SDL_Delay(500);
@@ -211,8 +218,9 @@ void CMain::SelPoffLoff()
 				Tiles->PictClicked();
 				CheckWord->Draw();
 				Dictionary->DrawText();
-				//
+				Tiles->Play();
 				Tiles->DrawBack();
+				Tiles->SetSwapOn(false);
 				csdl_setup->End();
 				SDL_Delay(500);
 				quitSelLoop = true;
@@ -320,7 +328,7 @@ void CMain::SelPoffLon()
 				Dictionary->DrawText();
 				DictionaryCheck();
 				Tiles->DrawBack();
-				Tiles->GetHand();
+				//Tiles->GetHand();
 				csdl_setup->End();
 				SDL_Delay(500);
 				SwapLoop = false;

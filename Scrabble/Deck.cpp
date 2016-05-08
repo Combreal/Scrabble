@@ -1,6 +1,6 @@
 #include "Deck.h"
 
-CDeck::CDeck(int passed_x, int passed_y, int passed_caseNumber, bool passed_occupied, int passed_casseCoefficient, char passed_letter, int passed_letterCoefficient, bool passed_couldbeReset)
+CDeck::CDeck(int passed_x, int passed_y, int passed_caseNumber, bool passed_occupied, int passed_caseCoefficient, char passed_letter, int passed_letterCoefficient, bool passed_couldbeReset)
 {
 	occupied = passed_occupied;
 	couldbeReset = passed_couldbeReset;
@@ -8,7 +8,7 @@ CDeck::CDeck(int passed_x, int passed_y, int passed_caseNumber, bool passed_occu
 	x=passed_x;
 	y=passed_y;
 	caseNumber=passed_caseNumber;
-	caseCoefficient=passed_casseCoefficient;
+	caseCoefficient=passed_caseCoefficient;
 	letterCoefficient=passed_letterCoefficient;
 }
 
@@ -34,7 +34,7 @@ void CDeck::SetLetter(char passed_Letter)
 
 void CDeck::SetLetterCoefficient(int passed_Coefficient)
 {
-	letter=passed_Coefficient;
+	letterCoefficient=passed_Coefficient;
 }
 
 void CDeck::SetCouldBeReset(bool passed_CouldBeReset)

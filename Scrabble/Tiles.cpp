@@ -7,6 +7,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	srand(unsigned(time(0)));
 	letter = '\0';
 	theTilesnb=0, tilesnb=0, decade_tilesnb = 0;
+	horizontalFirst=0, horizontalLast=0, verticalFirst=0, verticalLast = 0;
 	CxRelocb=0, CyRelocb=0;
 	wichpict = 0;
 	CxReloc=0, CyReloc=0;
@@ -16,6 +17,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	tmpFirstPillar=0, tmpFirstRow = 0;
 	tmpSwapedTileNb = 0;
 	tmpSwap = 0;
+	newScore = 0;
 	playerScore = 0;
 	machineScore = 0;
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
@@ -35,6 +37,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	isClicked = false;
 	putBackTile = false;
 	handLock = false;
+	lockSeekWord = true;
 	firsttile = true;
 	firsttileafteraturn = false;
 	secondtile = false;
@@ -42,6 +45,8 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	dreplswap = true;
 	initGetHand = true;
 	initPictClicked = true;
+	isAword = false;
+	sameWord = false;
 	Score = new CScore(csdl_setup);
 	TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 637, 95, 11, 15, '-', 0, 0, 0);
 	Decade_TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 627, 95, 11, 15, '-', 0, 0, 0);
@@ -280,32 +285,226 @@ void CTiles::Swapy()
 
 void CTiles::Play()
 {
-	TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+7);
-	random_shuffle(TilesNumber.begin(), TilesNumber.end());
-	for(size_t a = 0, size = OnDeck.size(); a < size; ++a) 
+	RetrievedWord();
+	SetNewScore();
+	playerScore = playerScore + newScore;
+	if(isAword)
 	{
+		TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+7);
+		random_shuffle(TilesNumber.begin(), TilesNumber.end());
+		for(size_t a = 0, size = OnDeck.size(); a < size; ++a) 
+		{
 			OnDeckForeva.push_back(OnDeck.at(a));
-	}
-	for(size_t h = 0, size = OnDeck.size(); h < size; ++h) 
-	{  
-		for(size_t f = 0, size = Hand.size(); f < size; ++f) 
+		}
+		for(size_t h = 0, size = OnDeck.size(); h < size; ++h) 
 		{  
-			if(OnDeck[h]==Hand[f])
+			for(size_t f = 0, size = Hand.size(); f < size; ++f) 
+			{  
+				if(OnDeck[h]==Hand[f])
+				{
+					Hand[f]=TilesNumber[h];
+					tiles[Hand.at(f)]->SetPosition(642,134+39*f);
+				}
+			}
+		}
+		tmpPillar=0, tmpRow = 0;
+		tmpFirstPillar=0, tmpFirstRow = 0;
+		tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
+		firsttile = false;
+		secondtile = false;
+		firsttileafteraturn = true;
+		secondtileafteraturn = false;
+		playAlreadyClicked = true;
+		OnDeck.clear();
+	}
+	if(!isAword)
+	{
+		for(int i=0; i<7;i++)
+		{
+			tiles[Hand.at(i)]->SetPosition(642,134+39*i);
+			tiles[Hand.at(i)]->SetisOndeck(false);
+			tiles[Hand.at(i)]->SetisOnswap(false);
+		}
+		for(size_t h = 0, size = Hand.size(); h < size; ++h) 
+		{
+			for(int k=0;k<15;k++)
 			{
-				Hand[f]=TilesNumber[h];
-				tiles[Hand.at(f)]->SetPosition(642,134+39*f);
+				for(int l=0;l<15;l++)
+				{
+					if(Deck[k][l]->GetCaseNumber() == Hand.at(h))
+					{
+						Deck[k][l]->SetLetter('-');
+						Deck[k][l]->SetLetterCoefficient(0);
+						Deck[k][l]->SetOccupied(false);
+						Deck[k][l]->SetCouldBeReset(false);
+					}
+				}
+			}
+		}
+		tmpPillar=0, tmpRow = 0;
+		tmpFirstPillar=0, tmpFirstRow = 0;
+		tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
+		firsttile = true;
+		secondtile = false;
+		firsttileafteraturn = false;
+		secondtileafteraturn = false;
+		playAlreadyClicked = true;
+		OnDeck.clear();
+	}
+}
+
+void CTiles::RetrievedWord()
+{
+	word = "";
+	horizontalFirst=0, horizontalLast=0, verticalFirst=0, verticalLast = 0;
+	if(tmpFirstPillar==tmpPillar)
+	{//horizontal
+		for(int i=tmpRow;i<15;i++)
+		{
+			if(!Deck[tmpPillar][i]->GetOccupied()&&lockSeekWord)
+			{
+				horizontalLast = i-1;
+				lockSeekWord = false;
+			}
+		}
+		for(int j=tmpRow;j>0;j--)
+		{
+			if(!Deck[tmpPillar][j]->GetOccupied()&&!lockSeekWord)
+			{
+				horizontalFirst = j+1;
+				lockSeekWord = true;
+			}
+		}
+		for(int k=horizontalFirst; k<=horizontalLast; k++)
+		{
+			word.push_back(Deck[tmpPillar][k]->GetLetter());
+		}
+	}
+	else if(tmpFirstRow==tmpRow)
+	{//vertical
+		for(int l=tmpPillar;l<15;l++)
+		{
+			if(!Deck[l][tmpRow]->GetOccupied()&&lockSeekWord)
+			{
+				verticalLast = l-1;
+				lockSeekWord = false;
+			}
+		}
+		for(int m=tmpPillar;m>0;m--)
+		{
+			if(!Deck[m][tmpRow]->GetOccupied()&&!lockSeekWord)
+			{
+				verticalFirst = m+1;
+				lockSeekWord = true;
+			}
+		}
+		for(int n=verticalFirst; n<=verticalLast; n++)
+		{
+			word.push_back(Deck[n][tmpRow]->GetLetter());
+		}
+	}
+	cout<<"The word : "<<word.c_str()<<endl;
+}
+
+void CTiles::SetNewScore()
+{
+	newScore = 0;
+	if(IsAWord())
+	{
+		if(horizontalFirst>0&&horizontalLast>0)
+		{
+			for(int i=horizontalFirst; i<=horizontalLast; i++)
+			{
+				newScore =  newScore + Deck[tmpPillar][i]->GetLetterCoefficient();
+				cout<<"Player's score : "<<newScore<<endl;
+			}
+			for(int j=horizontalFirst; j<=horizontalLast; j++)
+			{
+				switch(Deck[tmpPillar][j]->GetCaseCoefficient())
+				{
+				case 0:
+					break;
+				case 1:
+					newScore =  newScore - Deck[tmpPillar][j]->GetLetterCoefficient();
+					newScore =  newScore + (Deck[tmpPillar][j]->GetLetterCoefficient() * 2);
+					break;
+				case 2:
+					newScore =  newScore - Deck[tmpPillar][j]->GetLetterCoefficient();
+					newScore =  newScore + (Deck[tmpPillar][j]->GetLetterCoefficient() * 3);
+					break;
+				case 3:
+					newScore = newScore*2;
+					break;
+				case 4:
+					newScore = newScore*3;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		else if(verticalFirst>0&&verticalLast>0)
+		{
+			for(int k=verticalFirst; k<=verticalLast; k++)
+			{
+				//Deck[j][tmpRow]->GetCaseCoefficient()
+				newScore =  newScore + Deck[k][tmpRow]->GetLetterCoefficient();
+			}
+			for(int l=verticalFirst; l<=verticalLast; l++)
+			{
+				switch(Deck[l][tmpRow]->GetCaseCoefficient())
+				{
+				case 0:
+					break;
+				case 1:
+					newScore =  newScore - Deck[l][tmpRow]->GetLetterCoefficient();
+					newScore =  newScore + (Deck[l][tmpRow]->GetLetterCoefficient() * 2);
+					break;
+				case 2:
+					newScore =  newScore - Deck[l][tmpRow]->GetLetterCoefficient();
+					newScore =  newScore + (Deck[l][tmpRow]->GetLetterCoefficient() * 3);
+					break;
+				case 3:
+					newScore = newScore*2;
+					break;
+				case 4:
+					newScore = newScore*3;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
-	tmpPillar=0, tmpRow = 0;
-	tmpFirstPillar=0, tmpFirstRow = 0;
-	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
-	firsttile = false;
-	secondtile = false;
-	firsttileafteraturn = true;
-	secondtileafteraturn = false;
-	playAlreadyClicked = true;
-	OnDeck.clear();
+}
+
+bool CTiles::IsAWord()
+{
+	isAword = false;
+	ifstream file("data/dictionary/dEn.txt", ios::in);
+	if(file&&word.size()>1) //&&word.size()>1
+	{
+		while(! file.eof())
+		{
+			file>>testChain;
+			if(testChain.compare(word) == 0)
+			{
+				sameWord = true;
+			}
+		}
+		if(sameWord)
+		{
+			cout<<word<<" is in the dictionary."<<endl;
+			isAword = true;
+		}
+		else
+		{
+			cout<<word<<" is not in the dictionary."<<endl;
+			isAword = false;
+		}
+		file.close();
+	}
+	return isAword;
 }
 
 void CTiles::DrawBack()
@@ -519,8 +718,8 @@ void CTiles::SetTileOnDeck()
 void CTiles::PlaceOnDeck(int pillar, int row)
 {
 	OnDeck.push_back(wichpict);
-	Deck[pillar][row]->SetLetterCoefficient(tiles[pillar*15+row]->GetPoints());
-	Deck[pillar][row]->SetLetter(tiles[pillar*15+row]->GetLetter());
+	Deck[pillar][row]->SetLetterCoefficient(tiles[wichpict]->GetPoints());
+	Deck[pillar][row]->SetLetter(tiles[wichpict]->GetLetter());
 	Deck[pillar][row]->SetOccupied(true);
 	Deck[pillar][row]->SetCouldBeReset(true);
 	deckPillar=pillar;

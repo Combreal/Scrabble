@@ -20,6 +20,7 @@ public:
 	bool GetPlay() {return play;}
 	bool GetFirstTile() {return firsttile;}
 	bool GetPlayClicked() {return playAlreadyClicked;}
+	std::string GetWord() {return word;}
 	void TilesCounter();
 	void SetSwapOn(bool passed_SwapOn);
 	void SetPlay(bool passed_play);
@@ -44,20 +45,25 @@ private:
 	void PlaceOnDeck(int pillar, int row);
 	void PackedOnDeck();
 	void PackedOnDeckSecond();
+	void RetrievedWord();
+	void SetNewScore();
+	bool IsAWord();
 	int* MouseX;
     int* MouseY;
 	bool *swapLoop;
 	char letter;
 	size_t timeCheck;
+	std::string word;
+	std::string testChain;
 	float theTilesnb, tilesnb, decade_tilesnb;
 	float dTilesnb;
 	float comp;
-	int deckRow, deckPillar, tileCounter;
+	int deckRow, deckPillar, tileCounter, horizontalFirst, horizontalLast, verticalFirst, verticalLast;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow;
-	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, playerScore, machineScore;
+	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, playerScore, machineScore, newScore;
 	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow;
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked;
 	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn;
-	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked;
+	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord;
 };
 

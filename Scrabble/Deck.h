@@ -6,7 +6,7 @@
 class CDeck
 {
 public:
-	CDeck(int passed_x, int passed_y, int passed_caseNumber, bool passed_occupied, int passed_casseCoefficient, char passed_letter, int passed_letterCoefficient, bool passed_couldbeReset);
+	CDeck(int passed_x, int passed_y, int passed_caseNumber, bool passed_occupied, int passed_caseCoefficient, char passed_letter, int passed_letterCoefficient, bool passed_couldbeReset);
 	~CDeck(void);
 	int GetX() {return x;}
 	int GetY() {return y;}

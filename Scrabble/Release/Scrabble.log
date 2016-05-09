@@ -1,25 +1,19 @@
-﻿La génération a démarré 05/05/2016 13:49:20.
+﻿La génération a démarré 09/05/2016 16:03:03.
      1>Projet "C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Scrabble\Scrabble.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Release\Scrabble.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Deck.cpp Dictionary.cpp Main.cpp Score.cpp Scrabble.cpp SDL_Setup.cpp Sprite.cpp Tiles.cpp
-         Deck.cpp
-         Dictionary.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\include" /I"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp Tiles.cpp
          Main.cpp
-         Score.cpp
-         Scrabble.cpp
-         SDL_Setup.cpp
-         Sprite.cpp
          Tiles.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Release\Scrabble.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\lib\x86" /LIBPATH:"C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib /MANIFEST /ManifestFile:"Release\Scrabble.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Release\Scrabble.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\¢ombre\documents\visual studio 2010\Projects\Scrabble\Release\Scrabble.lib" /MACHINE:X86 Release\Deck.obj
          Release\Dictionary.obj
          Release\Main.obj
-         Release\Score.obj
          Release\Scrabble.obj
          Release\SDL_Setup.obj
          Release\Sprite.obj
+         Release\TextSprite.obj
          Release\Tiles.obj
          Génération de code en cours
          Fin de la génération du code
@@ -33,4 +27,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:04.57
+Temps écoulé 00:00:02.44

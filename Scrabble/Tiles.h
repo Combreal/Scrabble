@@ -15,6 +15,8 @@ public:
 	void PictClicked();
 	void Swapy();
 	void Play();
+	void Undo();
+	void CancelSwap();
 	bool GetSwapOn() {return swapon;}
 	bool GetPlay() {return play;}
 	bool GetFirstTile() {return firsttile;}
@@ -36,6 +38,8 @@ private:
 	std::vector<int> Hand;
 	std::vector<int> Swap;
 	std::vector<int> OnDeck;
+	std::vector<int> ResetPillar;
+	std::vector<int> ResetRow;
 	std::vector<int> OnDeckForeva;
 	void WichPict();
 	void SetTileOnDeck();

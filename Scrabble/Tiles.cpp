@@ -185,76 +185,25 @@ CTiles::~CTiles(void)
 
 void CTiles::GetHand()
 {
-	if(!initGetHand)
+	Hand.clear();
+	Swap.clear();
+	for(int i=0; i<7;i++)
 	{
-		if(playAlreadyClicked)
+		Hand.push_back(TilesNumber.at(i));
+		tiles[Hand.at(i)]->SetPosition(642,134+39*i);
+		tiles[Hand.at(i)]->SetisOndeck(false);
+		tiles[Hand.at(i)]->SetisOnswap(false);
+		for(int k=0;k<15;k++)
 		{
-			tmpPillar=0, tmpRow = 0;
-			tmpFirstPillar=0, tmpFirstRow = 0;
-			tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
-			firsttile = false;
-			secondtile = false;
-			firsttileafteraturn = true;
-			secondtileafteraturn = false;
-		}
-		else if(!playAlreadyClicked)
-		{
-			tmpPillar=0, tmpRow = 0;
-			tmpFirstPillar=0, tmpFirstRow = 0;
-			tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
-			firsttile = true;
-			secondtile = false;
-			firsttileafteraturn = false;
-			secondtileafteraturn = false;		
-		}
-		for(int i=0; i<7;i++)
-		{
-			tiles[Hand.at(i)]->SetPosition(642,134+39*i);
-			tiles[Hand.at(i)]->SetisOndeck(false);
-			tiles[Hand.at(i)]->SetisOnswap(false);
-		}
-		for(size_t h = 0, size = Hand.size(); h < size; ++h) 
-		{
-			for(int k=0;k<15;k++)
+			for(int l=0;l<15;l++)
 			{
-				for(int l=0;l<15;l++)
+				if(Deck[k][l]->GetCouldBeReset())
 				{
-					if(Deck[k][l]->GetCaseNumber() == Hand.at(h))
-					{
-						Deck[k][l]->SetLetter('-');
-						Deck[k][l]->SetLetterCoefficient(0);
-						Deck[k][l]->SetOccupied(false);
-						Deck[k][l]->SetCouldBeReset(false);
-					}
+					Deck[k][l]->SetOccupied(false);
+					Deck[k][l]->SetCouldBeReset(false);
 				}
 			}
 		}
-		OnDeck.clear();
-		Swap.clear();
-	}
-	else if(initGetHand)
-	{
-		Hand.clear();
-		Swap.clear();
-		for(int i=0; i<7;i++)
-		{
-			Hand.push_back(TilesNumber.at(i));
-			tiles[Hand.at(i)]->SetPosition(642,134+39*i);
-			tiles[Hand.at(i)]->SetisOndeck(false);
-			tiles[Hand.at(i)]->SetisOnswap(false);
-			for(int k=0;k<15;k++)
-			{
-				for(int l=0;l<15;l++)
-				{
-					if(Deck[k][l]->GetCouldBeReset())
-					{
-						Deck[k][l]->SetOccupied(false);
-						Deck[k][l]->SetCouldBeReset(false);
-					}
-				}
-			}
-		}
-		initGetHand = false;
 	}
 }
 
@@ -279,6 +228,57 @@ void CTiles::Swapy()
 		}
 	}
 	wichpict=9999;
+}
+
+void CTiles::Undo()
+{
+	if(playAlreadyClicked)
+	{
+		tmpPillar=0, tmpRow = 0;
+		tmpFirstPillar=0, tmpFirstRow = 0;
+		tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
+		firsttile = false;
+		secondtile = false;
+		firsttileafteraturn = true;
+		secondtileafteraturn = false;
+	}
+	else if(!playAlreadyClicked)
+	{
+		tmpPillar=0, tmpRow = 0;
+		tmpFirstPillar=0, tmpFirstRow = 0;
+		tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
+		firsttile = true;
+		secondtile = false;
+		firsttileafteraturn = false;
+		secondtileafteraturn = false;		
+	}		
+	for(size_t m = 0, size = ResetPillar.size(); m < size; ++m) 
+	{
+		for(size_t n = 0, size = ResetRow.size(); n < size; ++n) 
+		{
+			cout<<"ResetPillar.at(m) : "<<ResetPillar.at(m)<<endl;
+			cout<<"ResetRow.at(n) : "<<ResetRow.at(n)<<endl;
+			Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetLetter('-');
+			Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetLetterCoefficient(0);
+			Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetOccupied(false);
+			Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetCouldBeReset(false);
+		}
+	}
+	for(size_t h = 0, size = Hand.size(); h < size; ++h) 
+	{  
+		for(size_t i = 0, size = OnDeck.size(); i < size; ++i) 
+		{
+			if(Hand.at(h)==OnDeck.at(i))
+			{
+				tiles[Hand.at(h)]->SetPosition(642,134+39*h);
+				tiles[Hand.at(h)]->SetisOndeck(false);
+				tiles[Hand.at(h)]->SetisOnswap(false);
+			}
+		}
+	}
+	ResetPillar.clear();
+	ResetRow.clear();
+	OnDeck.clear();
 }
 
 void CTiles::Play()
@@ -315,6 +315,9 @@ void CTiles::Play()
 		playAlreadyClicked = true;
 		tileNumberb = tileNumberb - OnDeck.size();
 		OnDeck.clear();
+		ResetPillar.clear();
+		ResetRow.clear();
+		Swap.clear();
 	}
 	if(!isAword)
 	{
@@ -324,20 +327,14 @@ void CTiles::Play()
 			tiles[Hand.at(i)]->SetisOndeck(false);
 			tiles[Hand.at(i)]->SetisOnswap(false);
 		}
-		for(size_t h = 0, size = Hand.size(); h < size; ++h) 
+		for(size_t m = 0, size = ResetPillar.size(); m < size; ++m) 
 		{
-			for(int k=0;k<15;k++)
+			for(size_t n = 0, size = ResetRow.size(); n < size; ++n) 
 			{
-				for(int l=0;l<15;l++)
-				{
-					if(Deck[k][l]->GetCaseNumber() == Hand.at(h))
-					{
-						Deck[k][l]->SetLetter('-');
-						Deck[k][l]->SetLetterCoefficient(0);
-						Deck[k][l]->SetOccupied(false);
-						Deck[k][l]->SetCouldBeReset(false);
-					}
-				}
+				Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetLetter('-');
+				Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetLetterCoefficient(0);
+				Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetOccupied(false);
+				Deck[ResetPillar.at(m)][ResetRow.at(n)]->SetCouldBeReset(false);
 			}
 		}
 		tmpPillar=0, tmpRow = 0;
@@ -348,8 +345,26 @@ void CTiles::Play()
 		firsttileafteraturn = false;
 		secondtileafteraturn = false;
 		playAlreadyClicked = true;
+		ResetPillar.clear();
+		ResetRow.clear();
 		OnDeck.clear();
+		Swap.clear();
 	}
+}
+
+void CTiles::CancelSwap()
+{
+	for(size_t h = 0, size = Hand.size(); h < size; ++h) 
+	{  
+		for(size_t i = 0, size = Swap.size(); i < size; ++i) 
+		{
+			if(Hand.at(h)==Swap.at(i))
+			{
+				tiles[Hand.at(h)]->SetPosition(642,134+39*h);
+			}
+		}
+	}
+	Swap.clear();
 }
 
 void CTiles::RetrievedWord()
@@ -415,7 +430,6 @@ void CTiles::SetNewScore()
 			for(int i=horizontalFirst; i<=horizontalLast; i++)
 			{
 				newScore =  newScore + Deck[tmpPillar][i]->GetLetterCoefficient();
-				cout<<"Player's score : "<<newScore<<endl;
 			}
 			for(int j=horizontalFirst; j<=horizontalLast; j++)
 			{
@@ -742,6 +756,8 @@ void CTiles::SetTileOnDeck()
 void CTiles::PlaceOnDeck(int pillar, int row)
 {
 	OnDeck.push_back(wichpict);
+	ResetPillar.push_back(pillar);
+	ResetRow.push_back(row);
 	Deck[pillar][row]->SetLetterCoefficient(tiles[wichpict]->GetPoints());
 	Deck[pillar][row]->SetLetter(tiles[wichpict]->GetLetter());
 	Deck[pillar][row]->SetOccupied(true);

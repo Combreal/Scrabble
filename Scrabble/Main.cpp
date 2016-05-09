@@ -167,6 +167,7 @@ void CMain::SelPoffLoff()
 				//AI->Play();
 				csdl_setup->End();
 				SDL_Delay(500);
+				blockSwap = false;
 				quitSelLoop = true;
 			}
 			clickSel = 0;
@@ -187,17 +188,10 @@ void CMain::SelPoffLoff()
 				Undo2->Draw();
 				Play->Draw();
 				Tiles->SetPlay(false);
-				if(!Tiles->GetPlayClicked())
-				{
-					Tiles->SetFirstTile(true);
-				}
-				else if(Tiles->GetPlayClicked())
-				{
-					Tiles->SetFirstTileAfteraTurn(true);
-				}
-				Tiles->GetHand();
+				Tiles->SetSwapOn(false);
+				Tiles->Undo();
 				csdl_setup->End();
-				SDL_Delay(500);
+				//SDL_Delay(500);
 				quitSelLoop = true;
 			}
 			clickSel = 0;
@@ -214,10 +208,12 @@ void CMain::SelPoffLoff()
 				Dictionary->DrawText();
 				Tiles->Play();
 				Tiles->DrawBack();
-				Tiles->SetSwapOn(false);
 				csdl_setup->End();
 				SDL_Delay(500);
+				Tiles->SetSwapOn(false);
+				Tiles->SetPlay(false);
 				quitSelLoop = true;
+				blockSwap = false;
 			}
 			clickSel = 0;
 			break;
@@ -231,13 +227,19 @@ void CMain::SelPoffLoff()
 				Tiles->PictClicked();
 				if(Tiles->GetPlay())
 				{
-					Swap->Draw();
+					if(!blockSwap)
+					{
+						Swap->Draw();
+					}
 					Undo->Draw();
 					Play->Draw();
 				}
 				else if(!Tiles->GetPlay())
 				{
-					Swap->Draw();
+					if(!blockSwap)
+					{
+						Swap->Draw();
+					}
 					Pass->Draw();
 				}
 				CheckWord2->Draw();
@@ -313,6 +315,7 @@ void CMain::SelPoffLon()
 				Deck2->Draw();
 				Tiles->SetSwapOn(false);
 				Tiles->PictClicked();
+				Tiles->CancelSwap();
 				Swap->Draw();
 				Cancel2->Draw();
 				CheckWord->Draw();
@@ -324,6 +327,7 @@ void CMain::SelPoffLon()
 				SDL_Delay(500);
 				SwapLoop = false;
 				checkWordSl = false;
+				blockSwap = false;
 			}
 			clickSel = 0;
 			break;
@@ -340,8 +344,28 @@ void CMain::SelPoffLon()
 				Deck2->Draw();
 				Tiles->SetSwapOn(false);
 				Tiles->PictClicked();
-				Swap->Draw();
-				Cancel->Draw();
+				if(Tiles->GetPlay())
+				{
+					if(!blockSwap)
+					{
+						Swap->Draw();
+						Cancel->Draw();
+					}
+					else if(!blockSwap)
+					{
+						Swap->Draw();
+						Undo->Draw();
+						Play->Draw();
+					}
+				}
+				else if(!Tiles->GetPlay())
+				{
+					if(!blockSwap)
+					{
+						Swap->Draw();
+						Cancel->Draw();
+					}
+				}
 				CheckWord2->Draw();
 				Dictionary->DrawText();
 				if(Dictionary->IsAWord())

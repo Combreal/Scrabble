@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL_Setup.h"
 #include "Sprite.h"
+#include "textSprite.h"
 #include "Tiles.h"
 #include "Dictionary.h"
 

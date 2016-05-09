@@ -6,7 +6,6 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	csdl_setup = passed_SDL_Setup;
 	srand(unsigned(time(0)));
 	letter = '\0';
-	theTilesnb=0, tilesnb=0, decade_tilesnb = 0;
 	horizontalFirst=0, horizontalLast=0, verticalFirst=0, verticalLast = 0;
 	CxRelocb=0, CyRelocb=0;
 	wichpict = 0;
@@ -17,9 +16,11 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	tmpFirstPillar=0, tmpFirstRow = 0;
 	tmpSwapedTileNb = 0;
 	tmpSwap = 0;
+	tileNumberb=93, playerScoreb=0, machineScoreb = 0;
 	newScore = 0;
-	playerScore = 0;
-	machineScore = 0;
+	playerScorea = "0";
+	machineScorea = "0";
+	tileNumbera = "93";
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	noTileMoved = true;
 	Follow=false, Lockwichpict=false, swapon=false;
@@ -27,9 +28,6 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	MouseY = passed_MouseY;
 	swapLoop = passed_SwapLoop;
 	timeCheck = SDL_GetTicks();
-	dTilesnb = 0;
-	comp = 0;
-	tileCounter = 93;
 	play = false;
 	playAlreadyClicked = false;
 	isPackedOnDeck = false;
@@ -47,9 +45,9 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	initPictClicked = true;
 	isAword = false;
 	sameWord = false;
-	Score = new CScore(csdl_setup);
-	TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 637, 95, 11, 15, '-', 0, 0, 0);
-	Decade_TilesNb = new CSprite(csdl_setup->GetRenderer(), "data/counter/numbers_14.png", 627, 95, 11, 15, '-', 0, 0, 0);
+	PlayerScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", playerScorea, 18, 0, 0, 0, 0, 755, 11, 15, 25);//735 for >99 744 for>9 755 for<10
+	MachineScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", machineScorea, 18, 0, 0, 0, 0, 755, 45, 15, 25);
+	TileNumber = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", tileNumbera, 14, 0, 0, 0, 0, 639, 94, 11, 15); //631 if tileCounter>9
 	tiles[0] = new CSprite(csdl_setup->GetRenderer(), "data/tiles/joker.png", 0, 0, 37, 37, '_', 0, 0, 0);
 	tiles[1] = new CSprite(csdl_setup->GetRenderer(), "data/tiles/joker.png", 0, 0, 37, 37, '_', 0, 0, 0);
 	tiles[2] = new CSprite(csdl_setup->GetRenderer(), "data/tiles/A.png", 0, 0, 37, 37, 'a', 1, 0, 0);
@@ -169,9 +167,9 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 
 CTiles::~CTiles(void)
 {
-	delete TilesNb;
-	delete Decade_TilesNb;
-	delete Score;
+	delete PlayerScore;
+	delete MachineScore;
+	delete TileNumber;
 	for(int i=0;i<15;i++)
 	{
 		for(int j=0;j<15;j++)
@@ -287,7 +285,7 @@ void CTiles::Play()
 {
 	RetrievedWord();
 	SetNewScore();
-	playerScore = playerScore + newScore;
+	playerScoreb = playerScoreb + newScore;
 	if(isAword)
 	{
 		TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+7);
@@ -315,6 +313,7 @@ void CTiles::Play()
 		firsttileafteraturn = true;
 		secondtileafteraturn = false;
 		playAlreadyClicked = true;
+		tileNumberb = tileNumberb - OnDeck.size();
 		OnDeck.clear();
 	}
 	if(!isAword)
@@ -537,8 +536,33 @@ void CTiles::DrawBack()
 			tiles[OnDeckForeva.at(h)]->Draw();
 		}
 	}
-	Score->SetScore(playerScore);
-	Score->SetBotScore(machineScore);
+	if(tileNumberb>9)
+	{
+		TileNumber->SetX(631);
+	}
+	else if(tileNumberb<10)
+	{
+		TileNumber->SetX(639);
+	}
+	tileNumbera = to_string((_ULonglong)tileNumberb);
+	TileNumber->loadFromRenderedText(tileNumbera);
+	TileNumber->DrawText();
+	if(playerScoreb>99)
+	{
+		PlayerScore->SetX(735);
+	}
+	else if(playerScoreb>9)
+	{
+		PlayerScore->SetX(744);
+	}
+	else if(playerScoreb<10)
+	{
+		PlayerScore->SetX(755);
+	}
+	playerScorea = to_string((_ULonglong)playerScoreb);
+	PlayerScore->loadFromRenderedText(playerScorea);
+	PlayerScore->DrawText();
+	MachineScore->DrawText();
 }
 
 void CTiles::PictClicked()
@@ -840,31 +864,6 @@ void CTiles::WichPict()
 			Lockwichpict = true;
 			Follow = true;
 		}
-	}
-}
-
-void CTiles::TilesCounter()
-{
-	dTilesnb = (float)tileCounter;
-	theTilesnb = dTilesnb;
-	tilesnb = 0;
-	decade_tilesnb = 0;
-	comp = 0;
-	if(dTilesnb>=10)
-	{
-		comp = dTilesnb/10;
-		decade_tilesnb = floor(comp);
-		tilesnb = dTilesnb - decade_tilesnb*10;
-		Decade_TilesNb->TilesNbCrop((int)decade_tilesnb);
-		TilesNb->TilesNbCrop((int)tilesnb);
-		Decade_TilesNb->Draw();
-		TilesNb->Draw();
-	}
-	else if(dTilesnb<10)
-	{
-		tilesnb = dTilesnb;
-		TilesNb->TilesNbCrop((int)tilesnb);
-		TilesNb->Draw();
 	}
 }
 

@@ -70,7 +70,6 @@ void CMain::GameLoop()
 		csdl_setup->Begin();
 		SDL_GetMouseState(&MouseX, &MouseY);
 		Deck->Draw();
-		Tiles->TilesCounter();
 		if(Tiles->GetPlay())
 		{
 			if(!blockSwap)
@@ -101,7 +100,6 @@ void CMain::GameLoop()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck2->Draw();
-				Tiles->TilesCounter();
 				Swap->Draw();
 				Cancel->Draw();
 				CheckWord->Draw();
@@ -136,7 +134,6 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
-				Tiles->TilesCounter();
 				Tiles->PictClicked();
 				Swap2->Draw();
 				Pass->Draw();
@@ -160,7 +157,6 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
-				Tiles->TilesCounter();
 				Tiles->PictClicked();
 				Swap->Draw();
 				Pass2->Draw();
@@ -182,7 +178,6 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
-				Tiles->TilesCounter();
 				Tiles->PictClicked();
 				CheckWord->Draw();
 				Dictionary->DrawText();
@@ -214,7 +209,6 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
-				Tiles->TilesCounter();
 				Tiles->PictClicked();
 				CheckWord->Draw();
 				Dictionary->DrawText();
@@ -234,7 +228,6 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
-				Tiles->TilesCounter();
 				Tiles->PictClicked();
 				if(Tiles->GetPlay())
 				{
@@ -295,7 +288,6 @@ void CMain::SelPoffLon()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck2->Draw();
-				Tiles->TilesCounter();
 				Tiles->SetSwapOn(true);
 				Tiles->PictClicked();
 				Swap2->Draw();
@@ -319,7 +311,6 @@ void CMain::SelPoffLon()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck2->Draw();
-				Tiles->TilesCounter();
 				Tiles->SetSwapOn(false);
 				Tiles->PictClicked();
 				Swap->Draw();
@@ -347,7 +338,6 @@ void CMain::SelPoffLon()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck2->Draw();
-				Tiles->TilesCounter();
 				Tiles->SetSwapOn(false);
 				Tiles->PictClicked();
 				Swap->Draw();

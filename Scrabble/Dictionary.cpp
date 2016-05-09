@@ -105,6 +105,7 @@ bool CDictionary::loadFromRenderedText(std::string textureText)
 	{
 		SDL_DestroyTexture(Message);
 		Message = NULL;
+		TTF_CloseFont(font);
 	}
 	font = TTF_OpenFont(filePath.c_str(), policeSize);
 	textSurface = TTF_RenderText_Solid(font, textureText.c_str(), textColor);

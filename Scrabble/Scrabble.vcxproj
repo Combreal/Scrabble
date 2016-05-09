@@ -90,20 +90,20 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="Score.h" />
     <ClInclude Include="SDL_Setup.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextSprite.h" />
     <ClInclude Include="Tiles.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Dictionary.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Scrabble.cpp" />
     <ClCompile Include="SDL_Setup.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TextSprite.cpp" />
     <ClCompile Include="Tiles.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,6 +3,11 @@
 CSDL_Setup::CSDL_Setup(bool* quit, int ScreenWidth, int ScreenHeight)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
+	Icon = IMG_Load("data/icon/ScrabbleIco.png");
+	if (Icon == NULL)
+	{
+		std::cout<<"couldn't load icon. "<<std::endl;
+	}
 	window = NULL;
 	window = SDL_CreateWindow("Scrabble", 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN);
 	if (window == NULL)
@@ -10,6 +15,8 @@ CSDL_Setup::CSDL_Setup(bool* quit, int ScreenWidth, int ScreenHeight)
 		std::cout<<"window couldn't be created"<<std::endl;
 		*quit = true;
 	}
+	SDL_SetWindowIcon(window, Icon);
+	SDL_FreeSurface(Icon);
 	renderer = NULL;
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	firstEvent = new SDL_Event();

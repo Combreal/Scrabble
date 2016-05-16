@@ -28,6 +28,10 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	MouseY = passed_MouseY;
 	swapLoop = passed_SwapLoop;
 	timeCheck = SDL_GetTicks();
+	jockerPos[0] = 0;
+	jockerPos[1] = 0;
+	jocker[0] = false;
+	jocker[1] = false;
 	play = false;
 	playAlreadyClicked = false;
 	isPackedOnDeck = false;
@@ -494,8 +498,23 @@ void CTiles::SetNewScore()
 bool CTiles::IsAWord()
 {
 	isAword = false;
+	jocker[0] = false;
+	jocker[1] = false;
+	jockerPos[0] = 0;
+	jockerPos[1] = 0;
+	wordCopy = word;
+	for(int i=0;i<2;i++)
+	{
+		found = wordCopy.find('_');
+		if(wordCopy.find('_') != std::string::npos)
+		{
+			jocker[i]=true;
+			jockerPos[i]=found;
+			wordCopy.erase(found, 1);
+		}
+	}
 	ifstream file("data/dictionary/dEn.txt", ios::in);
-	if(file&&word.size()>1) //&&word.size()>1
+	if(file&&word.size()>1)
 	{
 		while(! file.eof())
 		{
@@ -503,6 +522,29 @@ bool CTiles::IsAWord()
 			if(testChain.compare(word) == 0)
 			{
 				sameWord = true;
+			}
+			else if(jocker[0]&&!jocker[1])
+			{
+				if(testChain.size()==word.size())
+				{
+					testChain.erase(jockerPos[0], 1);
+					if(testChain.compare(wordCopy) == 0)
+					{
+						sameWord = true;
+					}
+				}
+			}
+			else if(jocker[0]&&jocker[1])
+			{
+				if(testChain.size()==word.size())
+				{
+					testChain.erase(jockerPos[0], 1);
+					testChain.erase(jockerPos[1], 1);
+					if(testChain.compare(wordCopy) == 0)
+					{
+						sameWord = true;
+					}
+				}
 			}
 		}
 		if(sameWord)

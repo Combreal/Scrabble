@@ -14,5 +14,6 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	SDL_Event* firstEvent;
+	SDL_Surface *Icon;
 };
 

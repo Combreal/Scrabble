@@ -212,6 +212,7 @@ void CMain::SelPoffLoff()
 				SDL_Delay(500);
 				Tiles->SetSwapOn(false);
 				Tiles->SetPlay(false);
+				Tiles->AiPlay();
 				quitSelLoop = true;
 				blockSwap = false;
 			}

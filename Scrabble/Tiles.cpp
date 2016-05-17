@@ -16,6 +16,8 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	tmpFirstPillar=0, tmpFirstRow = 0;
 	tmpSwapedTileNb = 0;
 	tmpSwap = 0;
+	onDeckSize = 0;
+	TNLopOffCounter = 0;
 	tileNumberb=93, playerScoreb=0, machineScoreb = 0;
 	newScore = 0;
 	playerScorea = "0";
@@ -49,6 +51,8 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	initPictClicked = true;
 	isAword = false;
 	sameWord = false;
+	initBotHand = true;
+	initTNLopOff = true;
 	PlayerScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", playerScorea, 18, 0, 0, 0, 0, 755, 11, 15, 25);//735 for >99 744 for>9 755 for<10
 	MachineScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", machineScorea, 18, 0, 0, 0, 0, 755, 45, 15, 25);
 	TileNumber = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", tileNumbera, 14, 0, 0, 0, 0, 639, 94, 11, 15); //631 if tileCounter>9
@@ -292,20 +296,31 @@ void CTiles::Play()
 	playerScoreb = playerScoreb + newScore;
 	if(isAword)
 	{
-		TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+7);
-		random_shuffle(TilesNumber.begin(), TilesNumber.end());
-		for(size_t a = 0, size = OnDeck.size(); a < size; ++a) 
+		TNLopOffCounter = 0;
+		onDeckSize = OnDeck.size();
+		for(size_t a = 0, size = onDeckSize; a < size; ++a) 
 		{
 			OnDeckForeva.push_back(OnDeck.at(a));
 		}
-		for(size_t h = 0, size = OnDeck.size(); h < size; ++h) 
+		if(initTNLopOff)
+		{
+			TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+7);
+			initTNLopOff = false;
+		}
+		else if(!initTNLopOff)
+		{
+			TilesNumber.erase(TilesNumber.begin(), TilesNumber.begin()+OnDeck.size());
+		}
+		random_shuffle(TilesNumber.begin(), TilesNumber.end());
+		for(size_t h = 0, size = onDeckSize; h < size; ++h) //isn't it screwing things up?
 		{  
 			for(size_t f = 0, size = Hand.size(); f < size; ++f) 
 			{  
 				if(OnDeck[h]==Hand[f])
 				{
-					Hand[f]=TilesNumber[h];
+					Hand[f]=TilesNumber[TNLopOffCounter];
 					tiles[Hand.at(f)]->SetPosition(642,134+39*f);
+					TNLopOffCounter++;
 				}
 			}
 		}
@@ -317,7 +332,7 @@ void CTiles::Play()
 		firsttileafteraturn = true;
 		secondtileafteraturn = false;
 		playAlreadyClicked = true;
-		tileNumberb = tileNumberb - OnDeck.size();
+		tileNumberb = tileNumberb - onDeckSize;
 		OnDeck.clear();
 		ResetPillar.clear();
 		ResetRow.clear();
@@ -943,4 +958,41 @@ void CTiles::SetFirstTile(bool passed_FirstTile)
 void CTiles::SetFirstTileAfteraTurn(bool passed_FirstTileAfteraTurn)
 {
 	firsttileafteraturn=passed_FirstTileAfteraTurn;
+}
+
+void CTiles::SetMachineScore(std::string passed_score)
+{
+	machineScorea=passed_score;
+}
+
+void CTiles::SetTilesNumber(std::string passed_tilesNumber)
+{
+	tileNumbera=passed_tilesNumber;
+}
+
+void CTiles::AiPlay()
+{
+	if(initBotHand)
+	{
+		for(int i=0; i<7;i++)
+		{
+			BotHand.push_back(TilesNumber.at(i+onDeckSize));
+		}
+	}
+	if(!initBotHand)
+	{
+		//
+	}
+	//Spot letter on deck with at least 3 cases unocuppied right or down next to it 
+	//and the maximum space available (could be untill it reach an occupied case or the deck border)
+	//Class each scenario number possible in a vector, randomize the vector and apply its first number
+	//Search for a 3 letters min word with that letter selected and the BotHand ones
+	//
+	//					Repeat untill word match - including use of jockers
+	//					Or handle the swap for the Ai
+	//
+	//Place tiles on deck, keep track on OnDeckForEva
+	//Clean things up for next turn
+
+	onDeckSize = 0;
 }

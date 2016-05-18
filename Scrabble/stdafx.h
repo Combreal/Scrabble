@@ -1,14 +1,14 @@
 #pragma once
-#include <stdio.h>
 #include <iostream>
 #include <stdexcept>
-#include <cstdlib>
+//#include <cstdlib>
 #include <ctime>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include <iterator>
 #include <math.h>
 #include <SDL.h>
 #include <SDL_image.h>

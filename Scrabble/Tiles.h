@@ -48,14 +48,17 @@ private:
 	std::vector<int> RandomizedOnDeckForeva;
 	std::vector<int> BotHand;
 	std::vector<int> BotHandb;
+	std::vector<int> BotHandc;
+	std::vector<int> keepBotHand;
+	std::vector<int>::iterator it;
 	std::vector<char> BotHandChars;
 	std::vector<std::string> TransitHand;
 	std::vector<std::string> WordsFound;
-	bool IsInTheVector(std::string passed_word, const std::vector<std::string>& passed_vector);
+	bool IsInTheVector(std::string passed_word, std::vector<std::string>& passed_vector);
 	void findwords(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound, char passed_letter);
 	void GetDeckPillarAndRow(int passed_witchPict);
-	void GetBotDownSideMax();
-	void GetBotRightSideMax();
+	bool GetBotDownSideMax();
+	bool GetBotRightSideMax();
 	void InitBotHand(char passed_letter);
 	void WichPict();
 	void SetTileOnDeck();
@@ -65,7 +68,9 @@ private:
 	void PackedOnDeckSecond();
 	void RetrievedWord();
 	void SetNewScore();
+	void SetNewBotScore();
 	bool IsAWord();
+	void LopOffPT();
 	int* MouseX;
     int* MouseY;
 	bool *swapLoop;
@@ -82,11 +87,12 @@ private:
 	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow;
 	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter;
-	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, onDeckSize;
-	int botDownSideMax, botRightSideMax;
+	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter;
+	int botDownSideMax, botRightSideMax, newBotScore, botScoreb, horizontalBotFirst, horizontalBotLast, verticalBotFirst, verticalBotLast;
 	bool jocker[2];
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked, quitCheckWordListLoop;
 	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection;
 	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff;
+	bool GetBotRightSide, GetBotDownSide, noWord;
 };
 

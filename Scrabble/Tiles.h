@@ -47,6 +47,7 @@ private:
 	std::vector<int> OnDeckForeva;
 	std::vector<int> RandomizedOnDeckForeva;
 	std::vector<int> BotHand;
+	std::vector<int> BotHandTransf;
 	std::vector<int> BotHandb;
 	std::vector<int> BotHandc;
 	std::vector<int> keepBotHand;
@@ -55,7 +56,10 @@ private:
 	std::vector<std::string> TransitHand;
 	std::vector<std::string> WordsFound;
 	bool IsInTheVector(std::string passed_word, std::vector<std::string>& passed_vector);
+	bool IsInTheVectorb(int passed_id, std::vector<int>& passed_vector);
+	void FirstWordIsFromBot();
 	void findwords(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound, char passed_letter);
+	void findword(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound);
 	void GetDeckPillarAndRow(int passed_witchPict);
 	bool GetBotDownSideMax();
 	bool GetBotRightSideMax();
@@ -87,12 +91,12 @@ private:
 	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow;
 	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter;
-	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter;
+	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter, roll;
 	int botDownSideMax, botRightSideMax, newBotScore, botScoreb, horizontalBotFirst, horizontalBotLast, verticalBotFirst, verticalBotLast;
 	bool jocker[2];
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked, quitCheckWordListLoop;
 	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection;
 	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff;
-	bool GetBotRightSide, GetBotDownSide, noWord;
+	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot;
 };
 

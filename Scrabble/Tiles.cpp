@@ -1132,9 +1132,15 @@ void CTiles::AiPlay()
 			firstWordIsFromBot = true;
 		}
 	}
-	while(!GetBotDownSide && !GetBotRightSide &&!botPass)
+	while(!GetBotDownSide && !GetBotRightSide &&!botPass&&!noWord)
 	{
+		if(noWordCounter>=30 &&!botPass&&!firstWordIsFromBot)
+		{
+			noWord=true;
+			break;
+		}
 		noWordCounter++;
+		cout<<"noWordCounter : "<<noWordCounter<<endl;
 		random_shuffle(RandomizedOnDeckForeva.begin(), RandomizedOnDeckForeva.end());
 		BotchosenDirection = rand() & 1;
 		if(RandomizedOnDeckForeva.size()==0)
@@ -1143,7 +1149,7 @@ void CTiles::AiPlay()
 			firstWordIsFromBot = true;
 			break;
 		}
-		else if(BotchosenDirection&&!firstWordIsFromBot)
+		else if(BotchosenDirection&&!botPass&&!firstWordIsFromBot)
 		{
 			botDownSideMax = 0;
 			GetDeckPillarAndRow(RandomizedOnDeckForeva.at(0));
@@ -1162,10 +1168,6 @@ void CTiles::AiPlay()
 				break;
 			}
 			noWordCounter++;
-		}
-		if(noWordCounter==30 &&!botPass&&!firstWordIsFromBot)
-		{
-			noWord=true;
 		}
 	}
 	if(BotchosenDirection&&!noWord &&!botPass&&!firstWordIsFromBot)
@@ -1191,33 +1193,35 @@ void CTiles::AiPlay()
 		}
 		findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
 		random_shuffle(WordsFound.begin(), WordsFound.end());
-		for(size_t w=0, size=WordsFound.size();w<size;w++)
+		if(WordsFound.size()>0)
 		{
-			if(WordsFound.at(w).size()-1 <= (size_t)botDownSideMax)
+			for(size_t w=0, size=WordsFound.size();w<size;w++)
 			{
-				cout<<"Word found : "<<WordsFound.at(w)<<endl;
-				for(size_t l=1, sizea=WordsFound.at(w).size() ;l<sizea;l++)
+				if(WordsFound.at(w).size()-1 <= (size_t)botDownSideMax)
 				{
-					for(size_t n=0, sizem=BotHand.size();n<=sizem;n++)//was n=1
+					cout<<"Word found : "<<WordsFound.at(w)<<endl;
+					for(size_t l=1, sizea=WordsFound.at(w).size() ;l<sizea;l++)
 					{
-						if(WordsFound.at(w).at(l)==tiles[BotHand.at(n)]->GetLetter()&&!Deck[botPillarSearch+l][botRowSearch]->GetOccupied()&&!IsInTheVectorb(BotHand.at(n), BotHandTransf))//if things goes wrong, make a vector to reorder BotHand
+						for(size_t n=0, sizem=BotHand.size();n<sizem;n++)//was n=1 and n<=sizem super sh*ty caused the oor error
 						{
-							tiles[BotHand.at(n)]->SetPosition(Deck[botPillarSearch+l][botRowSearch]->GetX(),Deck[botPillarSearch+l][botRowSearch]->GetY());
-							tiles[BotHand.at(n)]->SetisOndeck(true);
-							cout<<"BotHand.at(n) : "<<BotHand.at(n)<<endl;
-							Deck[botPillarSearch+l][botRowSearch]->SetLetterCoefficient(tiles[BotHand.at(n)]->GetPoints());
-							Deck[botPillarSearch+l][botRowSearch]->SetLetter(tiles[BotHand.at(n)]->GetLetter());
-							Deck[botPillarSearch+l][botRowSearch]->SetOccupied(true);
-							Deck[botPillarSearch+l][botRowSearch]->SetTileId(BotHand.at(n));
-							OnDeckForeva.push_back(BotHand.at(n));
-							BotHandTransf.push_back(BotHand.at(n));
-							break;//aslo break point here if issue
+							if(WordsFound.at(w).at(l)==tiles[BotHand.at(n)]->GetLetter()&&!Deck[botPillarSearch+l][botRowSearch]->GetOccupied()&&!IsInTheVectorb(BotHand.at(n), BotHandTransf))//if things goes wrong, make a vector to reorder BotHand
+							{
+								tiles[BotHand.at(n)]->SetPosition(Deck[botPillarSearch+l][botRowSearch]->GetX(),Deck[botPillarSearch+l][botRowSearch]->GetY());
+								tiles[BotHand.at(n)]->SetisOndeck(true);
+								cout<<"BotHand.at(n) : "<<BotHand.at(n)<<endl;
+								Deck[botPillarSearch+l][botRowSearch]->SetLetterCoefficient(tiles[BotHand.at(n)]->GetPoints());
+								Deck[botPillarSearch+l][botRowSearch]->SetLetter(tiles[BotHand.at(n)]->GetLetter());
+								Deck[botPillarSearch+l][botRowSearch]->SetOccupied(true);
+								Deck[botPillarSearch+l][botRowSearch]->SetTileId(BotHand.at(n));
+								OnDeckForeva.push_back(BotHand.at(n));
+								BotHandTransf.push_back(BotHand.at(n));
+								break;
+							}
 						}
 					}
 				}
+				break;
 			}
-			//cout<<"GONE. "<<endl;
-			break;
 		}
 		verticalBotFirst = botPillarSearch;
 		verticalBotLast = verticalBotFirst+WordsFound.at(0).size()-1;
@@ -1246,31 +1250,34 @@ void CTiles::AiPlay()
 		}
 		findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
 		random_shuffle(WordsFound.begin(), WordsFound.end());
-		for(size_t v=0, size=WordsFound.size();v<size;v++)
+		if(WordsFound.size()>0)
 		{
-			if(WordsFound.at(v).size()-1 <= (size_t)botRightSideMax)
+			for(size_t v=0, size=WordsFound.size();v<size;v++)
 			{
-				cout<<"Word found : "<<WordsFound.at(v)<<endl;
-				for(size_t m=1, sizeb=WordsFound.at(v).size();m<sizeb;m++)
+				if(WordsFound.at(v).size()-1 <= (size_t)botRightSideMax)
 				{
-					for(size_t o=0, sizen=BotHand.size();o<=sizen;o++)
+					cout<<"Word found : "<<WordsFound.at(v)<<endl;
+					for(size_t m=1, sizeb=WordsFound.at(v).size();m<sizeb;m++)
 					{
-						if(WordsFound.at(v).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!Deck[botPillarSearch][botRowSearch+m]->GetOccupied()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))
+						for(size_t o=0, sizen=BotHand.size();o<sizen;o++)
 						{
-							tiles[BotHand.at(o)]->SetPosition(Deck[botPillarSearch][botRowSearch+m]->GetX(),Deck[botPillarSearch][botRowSearch+m]->GetY());
-							tiles[BotHand.at(o)]->SetisOndeck(true);
-							Deck[botPillarSearch][botRowSearch+m]->SetLetterCoefficient(tiles[BotHand.at(o)]->GetPoints());
-							Deck[botPillarSearch][botRowSearch+m]->SetLetter(tiles[BotHand.at(o)]->GetLetter());
-							Deck[botPillarSearch][botRowSearch+m]->SetOccupied(true);
-							Deck[botPillarSearch][botRowSearch+m]->SetTileId(BotHand.at(o));
-							OnDeckForeva.push_back(BotHand.at(o));
-							BotHandTransf.push_back(BotHand.at(o));
-							break;
+							if(WordsFound.at(v).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!Deck[botPillarSearch][botRowSearch+m]->GetOccupied()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))
+							{
+								tiles[BotHand.at(o)]->SetPosition(Deck[botPillarSearch][botRowSearch+m]->GetX(),Deck[botPillarSearch][botRowSearch+m]->GetY());
+								tiles[BotHand.at(o)]->SetisOndeck(true);
+								Deck[botPillarSearch][botRowSearch+m]->SetLetterCoefficient(tiles[BotHand.at(o)]->GetPoints());
+								Deck[botPillarSearch][botRowSearch+m]->SetLetter(tiles[BotHand.at(o)]->GetLetter());
+								Deck[botPillarSearch][botRowSearch+m]->SetOccupied(true);
+								Deck[botPillarSearch][botRowSearch+m]->SetTileId(BotHand.at(o));
+								OnDeckForeva.push_back(BotHand.at(o));
+								BotHandTransf.push_back(BotHand.at(o));
+								break;
+							}
 						}
 					}
 				}
+				break;
 			}
-			break;
 		}
 		horizontalBotFirst = botRowSearch;
 		horizontalBotLast = horizontalBotFirst+WordsFound.at(0).size()-1;
@@ -1382,7 +1389,7 @@ void CTiles::FirstWordIsFromBot()
 	cout<<"Word found : "<<WordsFound.at(0)<<endl;
 	for(size_t m=0, sizeb=WordsFound.at(0).size();m<sizeb;m++)
 	{
-		for(size_t o=1, sizen=BotHand.size();o<=sizen;o++)
+		for(size_t o=0, sizen=BotHand.size();o<sizen;o++)
 		{
 			if(WordsFound.at(0).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))//might needs to check if a letter is already sorted out
 			{
@@ -1430,6 +1437,7 @@ void CTiles::FirstWordIsFromBot()
 		}
 	}
 	tileNumberb = tileNumberb - 7;
+	initBotHand = false;
 }
 
 void CTiles::GetDeckPillarAndRow(int passed_witchPict)
@@ -1540,13 +1548,13 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 {
 	bool passed_initVector = true;
 	ifstream file("data/dictionary/dEn.txt", ios::in);
-	if(file)
+	if(file&&passed_TransitHand.size()>0)
 	{       
 		string testChain;		
 		while(! file.eof())
 		{
 			file>>testChain;
-			for(size_t i=0, size=passed_TransitHand.size(); i<size; ++i) //try <=
+			for(size_t i=0, size=passed_TransitHand.size(); i<size; ++i)
 			{
 
 				if((testChain.at(0)==passed_letter) && passed_TransitHand.at(i).find(testChain) != string::npos && !passed_initVector && testChain!="a")//&&testChain.size()>2
@@ -1613,7 +1621,7 @@ void CTiles::InitBotHand(char passed_letter)
 			{
 				BotHandChars.push_back(tiles[BotHand.at(k)]->GetLetter());
 			}
-			for(size_t j=0, size = 7-keepBotHand.size(); j<size;j++)
+			for(size_t j=0, size = 7-BotHand.size(); j<size;j++)
 			{
 				BotHand.push_back(TilesNumber.at(TilesNumber.size()-j-1));
 				BotHandChars.push_back(tiles[BotHand.at(j)]->GetLetter());

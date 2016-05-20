@@ -22,6 +22,8 @@ public:
 	bool GetPlay() {return play;}
 	bool GetFirstTile() {return firsttile;}
 	bool GetPlayClicked() {return playAlreadyClicked;}
+	int GetPlayerScore() {return playerScoreb;}
+	int GetBotScore() {return botScoreb;}
 	std::string GetWord() {return word;}
 	void SetSwapOn(bool passed_SwapOn);
 	void SetPlay(bool passed_play);
@@ -29,6 +31,7 @@ public:
 	void SetFirstTileAfteraTurn(bool passed_FirstTileAfteraTurn);
 	void SetMachineScore(std::string passed_score);
 	void SetTilesNumber(std::string passed_tilesNumber);
+	bool CheckDeadEnd();
 private:
 	CSprite* tiles[100];
 	CTextSprite* PlayerScore;
@@ -75,6 +78,7 @@ private:
 	void SetNewBotScore();
 	bool IsAWord();
 	void LopOffPT();
+	int rand_a_b(int a, int b);
 	int* MouseX;
     int* MouseY;
 	bool *swapLoop;
@@ -88,15 +92,15 @@ private:
 	std::string tileNumbera;
 	std::string testChain;
 	int jockerPos[2];
-	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch;
+	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch, deadEndCounter;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow;
-	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter;
+	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter, randTileNb;
 	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter, roll;
 	int botDownSideMax, botRightSideMax, newBotScore, botScoreb, horizontalBotFirst, horizontalBotLast, verticalBotFirst, verticalBotLast;
 	bool jocker[2];
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked, quitCheckWordListLoop;
 	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection;
 	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff;
-	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot;
+	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot, initRetrieveWord, ctrlInit, randTileNbFound, deadEnd;
 };
 

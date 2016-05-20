@@ -10,6 +10,7 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	MouseX, MouseY= 0;
 	clickSel, clickSwapSel = 0;
 	dictionaryresponce = 0;
+	victoryCounter = 0;
 	quit = false;
 	onlyOne= true;
 	initHand = true;
@@ -18,6 +19,7 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	checkWordSl = false;
 	checkCheckWordSl = false;
 	blockSwap = false;
+	victoryDrawn = false;
 	csdl_setup = new CSDL_Setup(&quit, passed_ScreenWidth, passed_ScreenHeight);
 	Deck = new CSprite(csdl_setup->GetRenderer(), "data/deck/gamedeck.png", 0, 0, 800, 600, '-', 0, 0, 0);
 	Deck2 = new CSprite(csdl_setup->GetRenderer(), "data/deck/gd_plusSwap.png", 0, 0, 800, 600, '-', 0, 0, 0);
@@ -37,6 +39,9 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	CheckWord2 = new CSprite(csdl_setup->GetRenderer(), "data/buttons/checkWord2.png", 608, 532, 93, 23, '-', 0, 0, 0);
 	Wid = new CSprite(csdl_setup->GetRenderer(), "data/buttons/wid.png", 608, 569, 166, 18, '-', 0, 0, 0);
 	Wind = new CSprite(csdl_setup->GetRenderer(), "data/buttons/wind.png", 608, 569, 184, 16, '-', 0, 0, 0);
+	pWon = new CSprite(csdl_setup->GetRenderer(), "data/deck/youWon.png", 615, 125, 167, 362, '-', 0, 0, 0);
+	mWon = new CSprite(csdl_setup->GetRenderer(), "data/deck/machineWon.png", 615, 125, 167, 362, '-', 0, 0, 0);
+	execo = new CSprite(csdl_setup->GetRenderer(), "data/deck/execo.png", 615, 125, 167, 362, '-', 0, 0, 0);
 }
 
 
@@ -60,6 +65,9 @@ CMain::~CMain(void)
 	delete Wid;
 	delete Wind;
 	delete Tiles;
+	delete pWon;
+	delete mWon;
+	delete execo;
 }
 
 void CMain::GameLoop()
@@ -92,6 +100,25 @@ void CMain::GameLoop()
 		Tiles->SetSwapOn(false);
 		Tiles->PictClicked();
 		Tiles->DrawBack();
+		if(Tiles->CheckDeadEnd()&&Tiles->GetPlayerScore()>Tiles->GetBotScore())
+		{
+			pWon->Draw();
+			SDL_Delay(500);
+			victoryDrawn = true;
+		}
+		else if(Tiles->CheckDeadEnd()&&Tiles->GetPlayerScore()<Tiles->GetBotScore())
+		{
+			mWon->Draw();
+			SDL_Delay(500);
+			victoryDrawn = true;
+		}
+		else if(Tiles->CheckDeadEnd()&&Tiles->GetPlayerScore()==Tiles->GetBotScore())
+		{
+			execo->Draw();
+			csdl_setup->End();
+			SDL_Delay(500);
+			victoryDrawn = true;
+		}
 		SelPoffLoff();
 		if(SwapLoop)
 		{
@@ -117,6 +144,14 @@ void CMain::SelPoffLoff()
 {
 	if(csdl_setup->GetMainEvent()->type == SDL_MOUSEBUTTONDOWN && csdl_setup->GetMainEvent()->button.button == SDL_BUTTON_LEFT)
 	{
+		if(victoryDrawn)
+		{
+			victoryCounter++;
+		}
+		if(victoryCounter==2)
+		{
+			quit = true;
+		}
 		switch(CheckSel())
 		{
 		case 0:
@@ -164,11 +199,13 @@ void CMain::SelPoffLoff()
 				Dictionary->DrawText();
 				DictionaryCheck();
 				Tiles->DrawBack();
-				//AI->Play();
 				csdl_setup->End();
 				SDL_Delay(500);
-				blockSwap = false;
+				Tiles->SetSwapOn(false);
+				Tiles->SetPlay(false);
+				Tiles->AiPlay();
 				quitSelLoop = true;
+				blockSwap = false;
 			}
 			clickSel = 0;
 			break;

@@ -23,6 +23,7 @@ private:
 	bool checkWordSl;
 	bool checkCheckWordSl;
 	bool onlyOne;
+	bool victoryDrawn;
 	bool initHand;
 	bool blockSwap;
 	int clickSel;
@@ -31,6 +32,7 @@ private:
 	int ScreenWidth;
 	int ScreenHeight;
 	int dictionaryresponce;
+	int victoryCounter;
 	CSDL_Setup* csdl_setup;
 	CSprite* Deck;
 	CSprite* Deck2;
@@ -49,6 +51,9 @@ private:
 	CSprite* CheckWord2;
 	CSprite* Wid;
 	CSprite* Wind;
+	CSprite* pWon;
+	CSprite* mWon;
+	CSprite* execo;
 	CTiles* Tiles;
 	CDictionary* Dictionary;
 };

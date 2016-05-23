@@ -39,8 +39,7 @@ private:
 	CTextSprite* TileNumber;
 	CSDL_Setup* csdl_setup;
 	CDeck* Deck[15][15];
-	std::vector<int> TilesNumber;
-	std::vector<int> TilesNumberb;
+	std::map<int,bool>TilesNumber;
 	std::vector<int> Hand;
 	std::vector<int> Swap;
 	std::vector<int> OnDeck;
@@ -55,6 +54,7 @@ private:
 	std::vector<int> BotHandc;
 	std::vector<int> keepBotHand;
 	std::vector<int>::iterator it;
+	std::map<int,bool>::iterator itt;
 	std::vector<char> BotHandChars;
 	std::vector<std::string> TransitHand;
 	std::vector<std::string> WordsFound;
@@ -63,6 +63,7 @@ private:
 	void FirstWordIsFromBot();
 	void findwords(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound, char passed_letter);
 	void findword(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound);
+	int GetAvailableTile(std::map<int,bool>& passed_map);
 	void GetDeckPillarAndRow(int passed_witchPict);
 	bool GetBotDownSideMax();
 	bool GetBotRightSideMax();
@@ -93,14 +94,15 @@ private:
 	std::string testChain;
 	int jockerPos[2];
 	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch, deadEndCounter;
-	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow;
+	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow, unusedTile, availableTile, randomKey;
 	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter, randTileNb;
 	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter, roll;
 	int botDownSideMax, botRightSideMax, newBotScore, botScoreb, horizontalBotFirst, horizontalBotLast, verticalBotFirst, verticalBotLast;
 	bool jocker[2];
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked, quitCheckWordListLoop;
-	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection;
+	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection, quitCDLoop;
 	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff;
 	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot, initRetrieveWord, ctrlInit, randTileNbFound, deadEnd;
+	bool isInTheVector, isInTheVectorb;
 };
 

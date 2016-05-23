@@ -8,6 +8,7 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <iterator>
 #include <math.h>
 #include <SDL.h>

@@ -29,6 +29,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	unusedTile = 0;
 	availableTile = 0;
 	randomKey = 0;
+	found=0, botFound = 0;
 	tileNumberb=93, playerScoreb=0, machineScoreb = 0;
 	newScore = 0;
 	playerScorea = "0";
@@ -51,10 +52,14 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	MouseY = passed_MouseY;
 	swapLoop = passed_SwapLoop;
 	timeCheck = SDL_GetTicks();
+	botJockerPos[0] = 0;
+	botJockerPos[1] = 0;
 	jockerPos[0] = 0;
 	jockerPos[1] = 0;
 	jocker[0] = false;
 	jocker[1] = false;
+	botJocker[0] = false;
+	botJocker[1] = false;
 	BotchosenDirection = false;
 	play = false;
 	playAlreadyClicked = false;
@@ -1571,24 +1576,56 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 	ifstream file("data/dictionary/dEn.txt", ios::in);
 	if(file&&passed_TransitHand.size()>0)
 	{       
-		string testChain;		
+		string botTestChain;		
 		while(! file.eof())
 		{
-			file>>testChain;
+			file>>botTestChain;
 			for(size_t i=0, size=passed_TransitHand.size(); i<size; ++i)
 			{
-
-				if((testChain.at(0)==passed_letter)&&testChain.size()>1 && passed_TransitHand.at(i).find(testChain) != string::npos && !passed_initVector && testChain!="i" && testChain!="a")//&&testChain.size()>2
+				botJocker[0] = false;
+				botJocker[1] = false;
+				botJockerPos[0] = 0;
+				botJockerPos[1] = 0;
+				botWordCopy = passed_TransitHand.at(i);
+				for(int j=0;j<2;j++)
 				{
-					if(!IsInTheVector(testChain, passed_WordsFound))
+					found = botWordCopy.find('_');
+					if(botWordCopy.find('_') != std::string::npos)
 					{
-						passed_WordsFound.push_back(testChain);
+						botJocker[j]=true;
+						botJockerPos[j]=found;
+						botWordCopy.erase(found, 1);
 					}
 				}
-				else if((testChain.at(0)==passed_letter)&&testChain.size()>1&& passed_TransitHand.at(i).find(testChain) != string::npos && passed_initVector)//&&testChain.size()>2 //&& testChain!="a" && testChain!="i" 
+				if(botJocker[0]&&!botJocker[1]&&!IsInTheVector(botTestChain, passed_WordsFound)&&(botTestChain.at(0)==passed_letter)&&botTestChain.size()>1)
 				{
-					passed_WordsFound.push_back(testChain);
-					passed_initVector = false;
+					if(botTestChain.size()==passed_TransitHand.at(i).size())
+					{
+						botTestChain.erase(jockerPos[0], 1);
+						if(botTestChain.compare(botWordCopy) == 0)
+						{
+							passed_WordsFound.push_back(botTestChain);
+						}
+					}
+				}
+				else if(botJocker[0]&&botJocker[1]&&!IsInTheVector(botTestChain, passed_WordsFound)&&(botTestChain.at(0)==passed_letter)&&botTestChain.size()>1)
+				{
+					if(botTestChain.size()==passed_TransitHand.at(i).size())
+					{
+						botTestChain.erase(jockerPos[0], 1);
+						botTestChain.erase(jockerPos[1], 1);
+						if(botTestChain.compare(botWordCopy) == 0)
+						{
+							passed_WordsFound.push_back(botTestChain);
+						}
+					}
+				}
+				else if((botTestChain.at(0)==passed_letter)&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos && botTestChain!="i" && botTestChain!="a")//&&testChain.size()>2 //&& !passed_initVector 
+				{
+					if(!IsInTheVector(botTestChain, passed_WordsFound))
+					{
+						passed_WordsFound.push_back(botTestChain);
+					}
 				}
 			}
 		}

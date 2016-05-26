@@ -20,6 +20,7 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	checkCheckWordSl = false;
 	blockSwap = false;
 	victoryDrawn = false;
+	changeDictionary = true;
 	csdl_setup = new CSDL_Setup(&quit, passed_ScreenWidth, passed_ScreenHeight);
 	Deck = new CSprite(csdl_setup->GetRenderer(), "data/deck/gamedeck.png", 0, 0, 800, 600, '-', 0, 0, 0);
 	Deck2 = new CSprite(csdl_setup->GetRenderer(), "data/deck/gd_plusSwap.png", 0, 0, 800, 600, '-', 0, 0, 0);
@@ -37,13 +38,14 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	Dictionary = new CDictionary(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", "Enter a word", 14, 0, 0, 0, 0, 613, 496, 0, 0);
 	CheckWord = new CSprite(csdl_setup->GetRenderer(), "data/buttons/checkWord.png", 608, 532, 93, 23, '-', 0, 0, 0);
 	CheckWord2 = new CSprite(csdl_setup->GetRenderer(), "data/buttons/checkWord2.png", 608, 532, 93, 23, '-', 0, 0, 0);
+	DictionaryChange = new CSprite(csdl_setup->GetRenderer(), "data/buttons/dictionary.png", 711, 532, 81, 23, '-', 0, 0, 0);
+	DictionaryChange2 = new CSprite(csdl_setup->GetRenderer(), "data/buttons/dictionary2.png", 711, 532, 81, 23, '-', 0, 0, 0);
 	Wid = new CSprite(csdl_setup->GetRenderer(), "data/buttons/wid.png", 608, 569, 166, 18, '-', 0, 0, 0);
 	Wind = new CSprite(csdl_setup->GetRenderer(), "data/buttons/wind.png", 608, 569, 184, 16, '-', 0, 0, 0);
 	pWon = new CSprite(csdl_setup->GetRenderer(), "data/deck/youWon.png", 615, 125, 167, 362, '-', 0, 0, 0);
 	mWon = new CSprite(csdl_setup->GetRenderer(), "data/deck/machineWon.png", 615, 125, 167, 362, '-', 0, 0, 0);
 	execo = new CSprite(csdl_setup->GetRenderer(), "data/deck/execo.png", 615, 125, 167, 362, '-', 0, 0, 0);
 }
-
 
 CMain::~CMain(void)
 {
@@ -62,6 +64,8 @@ CMain::~CMain(void)
 	delete Play2;
 	delete CheckWord;
 	delete CheckWord2;
+	delete DictionaryChange;
+	delete DictionaryChange2;
 	delete Wid;
 	delete Wind;
 	delete Tiles;
@@ -96,6 +100,10 @@ void CMain::GameLoop()
 			Pass->Draw();
 		}
 		CheckWord->Draw();
+		if(changeDictionary)
+		{
+			DictionaryChange->Draw();
+		}
 		DictionaryCheck();
 		Tiles->SetSwapOn(false);
 		Tiles->PictClicked();
@@ -299,7 +307,47 @@ void CMain::SelPoffLoff()
 			}
 			clickSel = 0;
 			break;
-
+		case 6:
+			cout<<"Button ChangeDictionary clicked. "<<endl;
+			while (!quit && !quitSelLoop && changeDictionary && csdl_setup->GetMainEvent()->type != SDL_QUIT)
+			{
+				if(changeDictionary)
+				{
+					csdl_setup->Begin();
+					SDL_GetMouseState(&MouseX, &MouseY);
+					Deck->Draw();
+					if(!Tiles->GetPlay())
+					{
+						if(!blockSwap)
+						{
+							Swap->Draw();
+						}
+						Pass->Draw();
+					}
+					Tiles->DrawBack();
+					CheckWord->Draw();
+					Dictionary->DrawText();
+					DictionaryChange2->Draw();
+					csdl_setup->End();
+					SDL_Delay(500);
+					//thread t1(changeDirectoryPath(), *this, arg1, arg2);
+					//changeDirectoryPath();
+					thread = SDL_CreateThread(TestThread, "TestThread", (void *)NULL);
+					if(thread==NULL)
+					{
+						cout<<"SDL_CreateThread failed: "<<SDL_GetError()<<endl;
+					}
+					else
+					{
+						SDL_WaitThread(thread, &threadReturnValue);
+						cout<<"Thread returned value: "<<threadReturnValue<<endl;
+					}
+					changeDictionary = false;
+					quitSelLoop = true;
+				}
+			}
+			clickSel = 0;
+			break;
 		default:
 			break;
 		}
@@ -430,7 +478,6 @@ void CMain::SelPoffLon()
 	csdl_setup->End();
 }
 
-
 int CMain::CheckSel()
 {
 	clickSel = 0;
@@ -455,7 +502,11 @@ int CMain::CheckSel()
 	else if((MouseX >= 608 && MouseX <= 701) && (MouseY >= 532 && MouseY <= 555))
 	{
 		clickSel = 5;//checkword
-	}	
+	}
+	else if((MouseX >= 711 && MouseX <= 792) && (MouseY >= 532 && MouseY <= 555))
+	{
+		clickSel = 6;//changedict
+	}
 	return clickSel;
 }
 
@@ -496,4 +547,57 @@ void CMain::DictionaryCheck()
 	{
 		Wind->Draw();
 	}
+}
+
+void CMain::changeDirectoryPath()
+{
+	OPENFILENAME ofn;
+	TCHAR szFile[MAX_PATH];
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.hwndOwner = NULL;
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = TEXT("Text Files\0*.txt\0Any File\0*.*\0");
+	ofn.nFilterIndex = 1;
+	ofn.lpstrTitle   = TEXT("Select dictionary");
+	ofn.lpstrInitialDir = L"data\\dictionary";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+	if(GetOpenFileName(&ofn))
+	{
+		OutputDebugString(ofn.lpstrFile);
+		int cSize = WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), NULL, 0, NULL, NULL);
+		string output(static_cast<size_t>(cSize), '\0');
+		WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), reinterpret_cast<char*>(&output[0]), cSize, NULL, NULL);
+		cout<<output<<endl;
+		//Dictionary->SetDictionaryPath(str);
+		Tiles->SetDictionaryPath(output);
+	}
+}
+
+int CMain::TestThread(void *ptr)
+{
+	int cnt=1;
+	OPENFILENAME ofn;
+	TCHAR szFile[MAX_PATH];
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.hwndOwner = NULL;
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = TEXT("Text Files\0*.txt\0Any File\0*.*\0");
+	ofn.nFilterIndex = 1;
+	ofn.lpstrTitle   = TEXT("Select dictionary");
+	ofn.lpstrInitialDir = L"data\\dictionary";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+	if(GetOpenFileName(&ofn))
+	{
+		OutputDebugString(ofn.lpstrFile);
+		int cSize = WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), NULL, 0, NULL, NULL);
+		string output(static_cast<size_t>(cSize), '\0');
+		WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), reinterpret_cast<char*>(&output[0]), cSize, NULL, NULL);
+	}
+    return cnt;
 }

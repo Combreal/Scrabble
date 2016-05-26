@@ -15,3 +15,10 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <windows.h>
+#include <commctrl.h>
+#include <stdlib.h>
+#include <tchar.h>
+#include "SDL_thread.h"
+#include "SDL_timer.h"
+

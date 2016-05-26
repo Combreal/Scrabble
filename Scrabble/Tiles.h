@@ -31,6 +31,7 @@ public:
 	void SetFirstTileAfteraTurn(bool passed_FirstTileAfteraTurn);
 	void SetMachineScore(std::string passed_score);
 	void SetTilesNumber(std::string passed_tilesNumber);
+	void SetDictionaryPath(std::string passed_dictionaryPath);
 	bool CheckDeadEnd();
 private:
 	CSprite* tiles[100];
@@ -94,6 +95,7 @@ private:
 	std::string machineScorea;
 	std::string tileNumbera;
 	std::string testChain;
+	std::string dictionaryPath;
 	int jockerPos[2];
 	int botJockerPos[2];
 	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch, deadEndCounter;

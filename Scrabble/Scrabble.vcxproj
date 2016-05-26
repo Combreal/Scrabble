@@ -60,7 +60,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2-2.0.3\lib\x86;C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_image-2.0.0\lib\x86;C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_mixer-2.0.0\lib\x86;C:\Users\¢ombre\Documents\Visual Studio 2010\Projects\Libraries-SDL2\SDL2_ttf-2.0.12\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;comdlg32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions> /ignore:4098</AdditionalOptions>

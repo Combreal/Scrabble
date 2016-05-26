@@ -14,6 +14,7 @@ public:
 	void DrawCurzor();
 	void RetrieveWord();
 	void cleanEditB();
+	void SetDictionaryPath(std::string passed_dictionaryPath);
 private:
 	CSDL_Setup* csdl_setup;
 	SDL_Renderer* renderer;
@@ -25,6 +26,7 @@ private:
 	std::string sentence;
 	std::string testChain;
 	std::string lopSentence;
+	std::string dictionaryPath;
 	TTF_Font *font;
 	SDL_Rect position;
 	bool Cursor;

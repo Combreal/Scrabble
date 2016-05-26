@@ -30,6 +30,7 @@ private:
 	SDL_Color textColor;
 	std::string filePath;
 	std::string sentence;
+	std::string filePatha;
 	TTF_Font *font;
 	SDL_Rect position;
 	bool renderText;

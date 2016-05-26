@@ -8,6 +8,7 @@ CDictionary::CDictionary(CSDL_Setup* passed_SDL_Setup, SDL_Renderer* passed_rend
 	policeSize = passed_PoliceSize;
 	filePath = passed_FilePath;
 	sentence = passed_Sentence;
+	dictionaryPath = "data/dictionary/dEn.txt";
 	Message = NULL;
 	time = 0;
 	timerb = 0;
@@ -65,6 +66,11 @@ CDictionary::~CDictionary(void)
 	font = NULL;
 	renderer = NULL;
 	TTF_Quit();
+}
+
+void CDictionary::SetDictionaryPath(std::string passed_dictionaryPath)
+{
+	dictionaryPath = passed_dictionaryPath;
 }
 
 void CDictionary::DrawText()
@@ -215,7 +221,7 @@ bool CDictionary::IsAWord()
 {
 	isAword = false;
 	sameWord = false;
-	ifstream file("data/dictionary/dEn.txt", ios::in);
+	ifstream file(dictionaryPath, ios::in);
 	lopSentence = sentence;
 	if(lopSentence.compare(0,1," ") == 0)
 	{

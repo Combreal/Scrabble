@@ -14,9 +14,11 @@ public:
 	int CheckSel();
 	int CheckSwapSel();
 private:
+	static int TestThread(void *ptr);
 	void SelPoffLoff();
 	void SelPoffLon();
 	void DictionaryCheck();
+	void changeDirectoryPath();
 	bool quit;
 	bool quitSelLoop;
 	bool SwapLoop;
@@ -26,6 +28,7 @@ private:
 	bool victoryDrawn;
 	bool initHand;
 	bool blockSwap;
+	bool changeDictionary;
 	int clickSel;
 	int clickSwapSel;
 	int MouseX, MouseY;
@@ -33,6 +36,8 @@ private:
 	int ScreenHeight;
 	int dictionaryresponce;
 	int victoryCounter;
+	int threadReturnValue;
+	SDL_Thread *thread;
 	CSDL_Setup* csdl_setup;
 	CSprite* Deck;
 	CSprite* Deck2;
@@ -49,6 +54,8 @@ private:
 	CSprite* Play2;
 	CSprite* CheckWord;
 	CSprite* CheckWord2;
+	CSprite* DictionaryChange; 
+	CSprite* DictionaryChange2;
 	CSprite* Wid;
 	CSprite* Wind;
 	CSprite* pWon;

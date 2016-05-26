@@ -35,6 +35,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	playerScorea = "0";
 	machineScorea = "0";
 	tileNumbera = "93";
+	dictionaryPath = "data/dictionary/dEn.txt";
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	randTileNbFound = false;
 	ctrlInit = false;
@@ -669,7 +670,7 @@ bool CTiles::IsAWord()
 			wordCopy.erase(found, 1);
 		}
 	}
-	ifstream file("data/dictionary/dEn.txt", ios::in);
+	ifstream file(dictionaryPath, ios::in);
 	if(file&&word.size()>1)
 	{
 		while(! file.eof())
@@ -1158,6 +1159,12 @@ bool CTiles::CheckDeadEnd()
 	return deadEnd;
 }
 
+void CTiles::SetDictionaryPath(std::string passed_dictionaryPath)
+{
+	dictionaryPath = passed_dictionaryPath;
+	cout<<dictionaryPath<<endl;
+}
+
 void CTiles::AiPlay()
 {
 	//Spot letter on deck with at least 3 cases unocuppied right or down next to it 
@@ -1573,7 +1580,7 @@ bool CTiles::IsInTheVectorb(int passed_id, vector<int>& passed_vector)
 void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound, char passed_letter)
 {
 	bool passed_initVector = true;
-	ifstream file("data/dictionary/dEn.txt", ios::in);
+	ifstream file(dictionaryPath, ios::in);
 	if(file&&passed_TransitHand.size()>0)
 	{       
 		string botTestChain;		
@@ -1639,7 +1646,7 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 
 void CTiles::findword(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound)
 {
-	ifstream file("data/dictionary/dEn.txt", ios::in);
+	ifstream file(dictionaryPath, ios::in);
 	if(file)
 	{       
 		string testChain;		

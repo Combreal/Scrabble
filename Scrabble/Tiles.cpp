@@ -24,6 +24,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	newBotScore = 0;
 	botScoreb = 0;
 	noWordCounter = 0;
+	noWordCounterb = 0;
 	roll = 0;
 	TNLopOffCounter = 0;
 	unusedTile = 0;
@@ -44,6 +45,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	noWord = false;
 	botPass = false;
 	noTileMoved = true;
+	randomizeBotHand = false;
 	initRetrieveWord = true;
 	firstWordIsFromBot = false;
 	GetBotRightSide=false, GetBotDownSide=false;
@@ -1372,6 +1374,15 @@ void CTiles::AiPlay()
 			tileNumberb = tileNumberb - 7;
 			initTNLopOff = false;
 		}
+		if(noWord)
+		{
+			noWordCounterb++;
+			if(noWordCounterb==2)
+			{
+				randomizeBotHand = true;
+				noWordCounterb = 0;
+			}
+		}
 		quitCheckWordListLoop = false;
 		GetBotRightSide=false, GetBotDownSide=false;
 		noWord = false;
@@ -1678,7 +1689,7 @@ void CTiles::InitBotHand(char passed_letter)
 	BotHandChars.push_back(passed_letter);
 	if(tileNumberb>7)
 	{
-		if(!initBotHand)
+		if(!initBotHand && !randomizeBotHand)
 		{
 			BotHand = keepBotHand;
 			for(size_t k=0, size = BotHand.size(); k<size;k++)
@@ -1701,7 +1712,33 @@ void CTiles::InitBotHand(char passed_letter)
 					}
 				}
 			}
+			randomizeBotHand = true;//randomize botHand once every 2 round
 			keepBotHand.clear();
+		}
+		else if(!initBotHand && randomizeBotHand)
+		{
+			for(size_t k=0, size = keepBotHand.size(); k<size;k++)
+			{
+				TilesNumber.at(keepBotHand.at(k))=false;
+			}
+			for(int j=0;j<7;j++)
+			{
+				randTileNbFound = true;
+				while(randTileNbFound)
+				{
+					randTileNb = GetAvailableTile(TilesNumber);
+					if(!IsInTheVectorb(randTileNb, OnDeck)&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, OnDeckForeva)&&!tiles[randTileNb]->GetisOndeck()&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, Swap))
+					{
+						TilesNumber.at(randTileNb)=true;
+						BotHand.push_back(randTileNb);
+						BotHandChars.push_back(tiles[BotHand.at(j)]->GetLetter());
+						randTileNbFound = false;
+					}
+				}
+			}
+			cout<<"randomized botHand. "<<endl;
+			keepBotHand.clear();
+			randomizeBotHand = false;
 		}
 		else if(initBotHand)
 		{

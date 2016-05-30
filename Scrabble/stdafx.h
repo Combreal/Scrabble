@@ -19,6 +19,4 @@
 #include <commctrl.h>
 #include <stdlib.h>
 #include <tchar.h>
-#include "SDL_thread.h"
-#include "SDL_timer.h"
 

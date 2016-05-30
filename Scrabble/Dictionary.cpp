@@ -8,7 +8,7 @@ CDictionary::CDictionary(CSDL_Setup* passed_SDL_Setup, SDL_Renderer* passed_rend
 	policeSize = passed_PoliceSize;
 	filePath = passed_FilePath;
 	sentence = passed_Sentence;
-	dictionaryPath = "data/dictionary/dEn.txt";
+	dictionaryPath = "data/dictionary/enDict.txt";
 	Message = NULL;
 	time = 0;
 	timerb = 0;

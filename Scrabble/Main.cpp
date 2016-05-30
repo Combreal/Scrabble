@@ -21,6 +21,13 @@ CMain::CMain(int passed_ScreenWidth, int passed_ScreenHeight)
 	blockSwap = false;
 	victoryDrawn = false;
 	changeDictionary = true;
+	newDictPath = "";
+	dwRet = GetCurrentDirectory(MAX_PATH, NPath);
+	if(dwRet == 0)
+	{
+      cout<<"GetCurrentDirectory failed (%d)\n"<<GetLastError()<<endl;
+      return;
+	}
 	csdl_setup = new CSDL_Setup(&quit, passed_ScreenWidth, passed_ScreenHeight);
 	Deck = new CSprite(csdl_setup->GetRenderer(), "data/deck/gamedeck.png", 0, 0, 800, 600, '-', 0, 0, 0);
 	Deck2 = new CSprite(csdl_setup->GetRenderer(), "data/deck/gd_plusSwap.png", 0, 0, 800, 600, '-', 0, 0, 0);
@@ -84,6 +91,7 @@ void CMain::GameLoop()
 		Deck->Draw();
 		if(Tiles->GetPlay())
 		{
+			changeDictionary = false;
 			if(!blockSwap)
 			{
 				Swap->Draw();
@@ -177,6 +185,10 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
+				if(changeDictionary)
+				{
+					changeDictionary = false;
+				}
 				Tiles->PictClicked();
 				Swap2->Draw();
 				Pass->Draw();
@@ -200,6 +212,10 @@ void CMain::SelPoffLoff()
 				csdl_setup->Begin();
 				SDL_GetMouseState(&MouseX, &MouseY);
 				Deck->Draw();
+				if(changeDictionary)
+				{
+					changeDictionary = false;
+				}
 				Tiles->PictClicked();
 				Swap->Draw();
 				Pass2->Draw();
@@ -311,40 +327,36 @@ void CMain::SelPoffLoff()
 			cout<<"Button ChangeDictionary clicked. "<<endl;
 			while (!quit && !quitSelLoop && changeDictionary && csdl_setup->GetMainEvent()->type != SDL_QUIT)
 			{
-				if(changeDictionary)
+				csdl_setup->Begin();
+				SDL_GetMouseState(&MouseX, &MouseY);
+				Deck->Draw();
+				if(!Tiles->GetPlay())
 				{
-					csdl_setup->Begin();
-					SDL_GetMouseState(&MouseX, &MouseY);
-					Deck->Draw();
-					if(!Tiles->GetPlay())
+					if(!blockSwap)
 					{
-						if(!blockSwap)
-						{
-							Swap->Draw();
-						}
-						Pass->Draw();
+						Swap->Draw();
 					}
-					Tiles->DrawBack();
-					CheckWord->Draw();
-					Dictionary->DrawText();
-					DictionaryChange2->Draw();
-					csdl_setup->End();
-					SDL_Delay(500);
-					//thread t1(changeDirectoryPath(), *this, arg1, arg2);
-					//changeDirectoryPath();
-					thread = SDL_CreateThread(TestThread, "TestThread", (void *)NULL);
-					if(thread==NULL)
-					{
-						cout<<"SDL_CreateThread failed: "<<SDL_GetError()<<endl;
-					}
-					else
-					{
-						SDL_WaitThread(thread, &threadReturnValue);
-						cout<<"Thread returned value: "<<threadReturnValue<<endl;
-					}
-					changeDictionary = false;
-					quitSelLoop = true;
+					Pass->Draw();
 				}
+				Tiles->DrawBack();
+				CheckWord->Draw();
+				Dictionary->DrawText();
+				DictionaryChange2->Draw();
+				csdl_setup->End();
+				//SDL_Delay(500);
+				changeDirectoryPath();
+				if(!SetCurrentDirectory(NPath))
+				{
+					cout<<"Error setting current directory: "<< GetLastError()<<endl;
+					return ;
+				}
+				if(!newDictPath.empty())
+				{
+					Dictionary->SetDictionaryPath(newDictPath);
+					Tiles->SetDictionaryPath(newDictPath);
+				}
+				changeDictionary = false;
+				quitSelLoop = true;
 			}
 			clickSel = 0;
 			break;
@@ -570,34 +582,9 @@ void CMain::changeDirectoryPath()
 		int cSize = WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), NULL, 0, NULL, NULL);
 		string output(static_cast<size_t>(cSize), '\0');
 		WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), reinterpret_cast<char*>(&output[0]), cSize, NULL, NULL);
-		cout<<output<<endl;
-		//Dictionary->SetDictionaryPath(str);
-		Tiles->SetDictionaryPath(output);
+		//cout<<output<<endl;
+		newDictPath = output;
+		//cdpDone = false;
 	}
 }
 
-int CMain::TestThread(void *ptr)
-{
-	int cnt=1;
-	OPENFILENAME ofn;
-	TCHAR szFile[MAX_PATH];
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.lpstrFile = szFile;
-	ofn.lpstrFile[0] = '\0';
-	ofn.hwndOwner = NULL;
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = TEXT("Text Files\0*.txt\0Any File\0*.*\0");
-	ofn.nFilterIndex = 1;
-	ofn.lpstrTitle   = TEXT("Select dictionary");
-	ofn.lpstrInitialDir = L"data\\dictionary";
-	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
-	if(GetOpenFileName(&ofn))
-	{
-		OutputDebugString(ofn.lpstrFile);
-		int cSize = WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), NULL, 0, NULL, NULL);
-		string output(static_cast<size_t>(cSize), '\0');
-		WideCharToMultiByte (CP_ACP, 0, ofn.lpstrFile, wcslen(ofn.lpstrFile), reinterpret_cast<char*>(&output[0]), cSize, NULL, NULL);
-	}
-    return cnt;
-}

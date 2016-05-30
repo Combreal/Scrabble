@@ -35,7 +35,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	playerScorea = "0";
 	machineScorea = "0";
 	tileNumbera = "93";
-	dictionaryPath = "data/dictionary/dEn.txt";
+	dictionaryPath = "data/dictionary/enDict.txt";
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	randTileNbFound = false;
 	ctrlInit = false;
@@ -865,7 +865,7 @@ void CTiles::SetTileOnDeck()
 {
 	for(int i=0;i<7;i++)
 	{
-		if((tmpTileX>=642 && tmpTileX<=680) && (tmpTileY>=134 && tmpTileY<=405) && (*MouseX >= 642 && *MouseX <= 680) && (*MouseY >= 134+39*i && *MouseY <= 171+39*i) && !tiles[wichpict]->GetisOndeck())
+		if((tmpTileX>=642 && tmpTileX<=680) && (tmpTileY>=134 && tmpTileY<=405) && (*MouseX >= 642 && *MouseX <= 680) && (*MouseY >= 134+39*i && *MouseY <= 171+39*i) && !tiles[wichpict]->GetisOndeck() && !*swapLoop)
 		{
 			for(int j=0;j<7;j++)
 			{

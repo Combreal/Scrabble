@@ -14,7 +14,6 @@ public:
 	int CheckSel();
 	int CheckSwapSel();
 private:
-	static int TestThread(void *ptr);
 	void SelPoffLoff();
 	void SelPoffLon();
 	void DictionaryCheck();
@@ -36,8 +35,9 @@ private:
 	int ScreenHeight;
 	int dictionaryresponce;
 	int victoryCounter;
-	int threadReturnValue;
-	SDL_Thread *thread;
+	TCHAR NPath[MAX_PATH];
+	DWORD dwRet;
+	std::string newDictPath;
 	CSDL_Setup* csdl_setup;
 	CSprite* Deck;
 	CSprite* Deck2;

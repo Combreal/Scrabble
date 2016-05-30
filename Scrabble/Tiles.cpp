@@ -13,6 +13,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	CxReloc=0, CyReloc=0;
 	deckRow=0, deckPillar = 0;
 	botDownSideMax=0, botRightSideMax = 0;
+	botUpSideMax=0, botLeftSideMax = 0;
 	botPillarSearch=0, botRowSearch = 0;
 	deadEndCounter = 0;
 	tmpTileX=0, tmpTileY = 0;
@@ -49,6 +50,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	initRetrieveWord = true;
 	firstWordIsFromBot = false;
 	GetBotRightSide=false, GetBotDownSide=false;
+	GetBotLeftSide=false, GetBotUpSide=false;
 	Follow=false, Lockwichpict=false, swapon=false;
 	isInTheVector=false, isInTheVectorb=false;
 	MouseX = passed_MouseX;
@@ -1200,6 +1202,7 @@ void CTiles::AiPlay()
 			if(noWordCounter>=30 &&!botPass&&!firstWordIsFromBot)
 			{
 				noWord=true;
+				forceBotHandRandomization();
 				break;
 			}
 			noWordCounter++;
@@ -1216,7 +1219,7 @@ void CTiles::AiPlay()
 			{
 				botDownSideMax = 0;
 				GetDeckPillarAndRow(RandomizedOnDeckForeva.at(0));
-				if(GetBotDownSideMax())
+				if(GetBotDownSideMax()&&GetBotUpSideMax())
 				{
 					break;
 				}
@@ -1226,7 +1229,7 @@ void CTiles::AiPlay()
 			{
 				botRightSideMax = 0;
 				GetDeckPillarAndRow(RandomizedOnDeckForeva.at(0));
-				if(GetBotRightSideMax())
+				if(GetBotRightSideMax()&&GetBotLeftSideMax())
 				{
 					break;
 				}
@@ -1235,116 +1238,11 @@ void CTiles::AiPlay()
 		}
 		if(BotchosenDirection&&!noWord &&!botPass&&!firstWordIsFromBot)
 		{
-			//botDownSideMax
-			InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-			BotHandb = BotHand;
-			string builtChars(BotHandChars.begin(), BotHandChars.end());
-			TransitHand.push_back(builtChars);
-			for(int i=0;i<63;i++)
-			{
-				quitCheckWordListLoop = false;
-				while(!quitCheckWordListLoop)
-				{
-					random_shuffle(BotHandChars.begin(), BotHandChars.end());
-					string builtChars(BotHandChars.begin(), BotHandChars.end());
-					if(!IsInTheVector(builtChars, TransitHand))
-					{
-						TransitHand.push_back(builtChars);
-						quitCheckWordListLoop = true;
-					}
-				}
-			}
-			findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-			random_shuffle(WordsFound.begin(), WordsFound.end());
-			if(WordsFound.size()>0)
-			{
-				for(size_t w=0, size=WordsFound.size();w<size;w++)
-				{
-					if(WordsFound.at(w).size()-1 < (size_t)botDownSideMax)
-					{
-						cout<<"Word found : "<<WordsFound.at(w)<<endl;
-						for(size_t l=1, sizea=WordsFound.at(w).size() ;l<sizea;l++)
-						{
-							for(size_t n=0, sizem=BotHand.size();n<sizem;n++)//was n=1 and n<=sizem super sh*ty caused the oor error
-							{
-								if(WordsFound.at(w).at(l)==tiles[BotHand.at(n)]->GetLetter()&&!Deck[botPillarSearch+l][botRowSearch]->GetOccupied()&&!IsInTheVectorb(BotHand.at(n), BotHandTransf))//if things goes wrong, make a vector to reorder BotHand
-								{
-									tiles[BotHand.at(n)]->SetPosition(Deck[botPillarSearch+l][botRowSearch]->GetX(),Deck[botPillarSearch+l][botRowSearch]->GetY());
-									tiles[BotHand.at(n)]->SetisOndeck(true);
-									cout<<"BotHand.at(n) : "<<BotHand.at(n)<<endl;
-									Deck[botPillarSearch+l][botRowSearch]->SetLetterCoefficient(tiles[BotHand.at(n)]->GetPoints());
-									Deck[botPillarSearch+l][botRowSearch]->SetLetter(tiles[BotHand.at(n)]->GetLetter());
-									Deck[botPillarSearch+l][botRowSearch]->SetOccupied(true);
-									Deck[botPillarSearch+l][botRowSearch]->SetTileId(BotHand.at(n));
-									OnDeckForeva.push_back(BotHand.at(n));
-									BotHandTransf.push_back(BotHand.at(n));
-									break;
-								}
-							}
-						}
-					}
-					break;
-				}
-				verticalBotFirst = botPillarSearch;
-				verticalBotLast = verticalBotFirst+WordsFound.at(0).size()-1;
-				horizontalBotFirst = botRowSearch;
-			}
+			botDownSideNormal();
 		}
 		else if(!BotchosenDirection&&!noWord &&!botPass&&!firstWordIsFromBot)
 		{
-			//botRightSideMax
-			InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-			BotHandb = BotHand;
-			string builtChars(BotHandChars.begin(), BotHandChars.end());
-			TransitHand.push_back(builtChars);
-			for(int j=0;j<63;j++)
-			{
-				quitCheckWordListLoop = false;
-				while(!quitCheckWordListLoop)
-				{
-					random_shuffle(BotHandChars.begin(), BotHandChars.end());
-					string builtChars(BotHandChars.begin(), BotHandChars.end());
-					if(!IsInTheVector(builtChars, TransitHand))
-					{
-						TransitHand.push_back(builtChars);
-						quitCheckWordListLoop = true;
-					}
-				}
-			}
-			findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-			random_shuffle(WordsFound.begin(), WordsFound.end());
-			if(WordsFound.size()>0)
-			{
-				for(size_t v=0, size=WordsFound.size();v<size;v++)
-				{
-					if(WordsFound.at(v).size()-1 < (size_t)botRightSideMax)
-					{
-						cout<<"Word found : "<<WordsFound.at(v)<<endl;
-						for(size_t m=1, sizeb=WordsFound.at(v).size();m<sizeb;m++)
-						{
-							for(size_t o=0, sizen=BotHand.size();o<sizen;o++)
-							{
-								if(WordsFound.at(v).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!Deck[botPillarSearch][botRowSearch+m]->GetOccupied()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))
-								{
-									tiles[BotHand.at(o)]->SetPosition(Deck[botPillarSearch][botRowSearch+m]->GetX(),Deck[botPillarSearch][botRowSearch+m]->GetY());
-									tiles[BotHand.at(o)]->SetisOndeck(true);
-									Deck[botPillarSearch][botRowSearch+m]->SetLetterCoefficient(tiles[BotHand.at(o)]->GetPoints());
-									Deck[botPillarSearch][botRowSearch+m]->SetLetter(tiles[BotHand.at(o)]->GetLetter());
-									Deck[botPillarSearch][botRowSearch+m]->SetOccupied(true);
-									Deck[botPillarSearch][botRowSearch+m]->SetTileId(BotHand.at(o));
-									OnDeckForeva.push_back(BotHand.at(o));
-									BotHandTransf.push_back(BotHand.at(o));
-									break;
-								}
-							}
-						}
-					}
-					break;
-				}
-				horizontalBotFirst = botRowSearch;
-				horizontalBotLast = horizontalBotFirst+WordsFound.at(0).size()-1;
-				verticalBotFirst = botPillarSearch;
-			}
+			botRightSideNormal();
 		}
 		if(!botPass&&!firstWordIsFromBot&&WordsFound.size()>0)
 		{
@@ -1400,6 +1298,119 @@ void CTiles::AiPlay()
 		TransitHand.clear();
 		WordsFound.clear();
 		LopOffPT();
+	}
+}
+
+void CTiles::botDownSideNormal()
+{
+	InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	BotHandb = BotHand;
+	string builtChars(BotHandChars.begin(), BotHandChars.end());
+	TransitHand.push_back(builtChars);
+	for(int i=0;i<63;i++)
+	{
+		quitCheckWordListLoop = false;
+		while(!quitCheckWordListLoop)
+		{
+			random_shuffle(BotHandChars.begin(), BotHandChars.end());
+			string builtChars(BotHandChars.begin(), BotHandChars.end());
+			if(!IsInTheVector(builtChars, TransitHand))
+			{
+				TransitHand.push_back(builtChars);
+				quitCheckWordListLoop = true;
+			}
+		}
+	}
+	findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	random_shuffle(WordsFound.begin(), WordsFound.end());
+	if(WordsFound.size()>0)
+	{
+		for(size_t w=0, size=WordsFound.size();w<size;w++)
+		{
+			if(WordsFound.at(w).size()-1 < (size_t)botDownSideMax)
+			{
+				cout<<"Word found : "<<WordsFound.at(w)<<endl;
+				for(size_t l=1, sizea=WordsFound.at(w).size() ;l<sizea;l++)
+				{
+					for(size_t n=0, sizem=BotHand.size();n<sizem;n++)//was n=1 and n<=sizem super sh*ty caused the oor error
+					{
+						if(WordsFound.at(w).at(l)==tiles[BotHand.at(n)]->GetLetter()&&!Deck[botPillarSearch+l][botRowSearch]->GetOccupied()&&!IsInTheVectorb(BotHand.at(n), BotHandTransf))//if things goes wrong, make a vector to reorder BotHand
+						{
+							tiles[BotHand.at(n)]->SetPosition(Deck[botPillarSearch+l][botRowSearch]->GetX(),Deck[botPillarSearch+l][botRowSearch]->GetY());
+							tiles[BotHand.at(n)]->SetisOndeck(true);
+							cout<<"BotHand.at(n) : "<<BotHand.at(n)<<endl;
+							Deck[botPillarSearch+l][botRowSearch]->SetLetterCoefficient(tiles[BotHand.at(n)]->GetPoints());
+							Deck[botPillarSearch+l][botRowSearch]->SetLetter(tiles[BotHand.at(n)]->GetLetter());
+							Deck[botPillarSearch+l][botRowSearch]->SetOccupied(true);
+							Deck[botPillarSearch+l][botRowSearch]->SetTileId(BotHand.at(n));
+							OnDeckForeva.push_back(BotHand.at(n));
+							BotHandTransf.push_back(BotHand.at(n));
+							break;
+						}
+					}
+				}
+			}
+			break;
+		}
+		verticalBotFirst = botPillarSearch;
+		verticalBotLast = verticalBotFirst+WordsFound.at(0).size()-1;
+		horizontalBotFirst = botRowSearch;
+	}
+}
+
+void CTiles::botRightSideNormal()
+{
+	InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	BotHandb = BotHand;
+	string builtChars(BotHandChars.begin(), BotHandChars.end());
+	TransitHand.push_back(builtChars);
+	for(int j=0;j<63;j++)
+	{
+		quitCheckWordListLoop = false;
+		while(!quitCheckWordListLoop)
+		{
+			random_shuffle(BotHandChars.begin(), BotHandChars.end());
+			string builtChars(BotHandChars.begin(), BotHandChars.end());
+			if(!IsInTheVector(builtChars, TransitHand))
+			{
+				TransitHand.push_back(builtChars);
+				quitCheckWordListLoop = true;
+			}
+		}
+	}
+	findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	random_shuffle(WordsFound.begin(), WordsFound.end());
+	if(WordsFound.size()>0)
+	{
+		for(size_t v=0, size=WordsFound.size();v<size;v++)
+		{
+			if(WordsFound.at(v).size()-1 < (size_t)botRightSideMax)
+			{
+				cout<<"Word found : "<<WordsFound.at(v)<<endl;
+				for(size_t m=1, sizeb=WordsFound.at(v).size();m<sizeb;m++)
+				{
+					for(size_t o=0, sizen=BotHand.size();o<sizen;o++)
+					{
+						if(WordsFound.at(v).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!Deck[botPillarSearch][botRowSearch+m]->GetOccupied()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))
+						{
+							tiles[BotHand.at(o)]->SetPosition(Deck[botPillarSearch][botRowSearch+m]->GetX(),Deck[botPillarSearch][botRowSearch+m]->GetY());
+							tiles[BotHand.at(o)]->SetisOndeck(true);
+							Deck[botPillarSearch][botRowSearch+m]->SetLetterCoefficient(tiles[BotHand.at(o)]->GetPoints());
+							Deck[botPillarSearch][botRowSearch+m]->SetLetter(tiles[BotHand.at(o)]->GetLetter());
+							Deck[botPillarSearch][botRowSearch+m]->SetOccupied(true);
+							Deck[botPillarSearch][botRowSearch+m]->SetTileId(BotHand.at(o));
+							OnDeckForeva.push_back(BotHand.at(o));
+							BotHandTransf.push_back(BotHand.at(o));
+							break;
+						}
+					}
+				}
+			}
+			break;
+		}
+		horizontalBotFirst = botRowSearch;
+		horizontalBotLast = horizontalBotFirst+WordsFound.at(0).size()-1;
+		verticalBotFirst = botPillarSearch;
 	}
 }
 
@@ -1500,6 +1511,36 @@ void CTiles::GetDeckPillarAndRow(int passed_witchPict)
 	}
 }
 
+bool CTiles::GetBotUpSideMax()
+{
+	botUpSideMax = 0;
+	if(!Deck[botPillarSearch-1][botRowSearch]->GetOccupied()&&!Deck[botPillarSearch+1][botPillarSearch]->GetOccupied())//&&!Deck[botPillarSearch+1][botPillarSearch]->GetOccupied()
+	{
+		for(int k=1;k<16;k++)
+		{
+			if(botPillarSearch+k>14)
+			{
+				break;
+			}
+			else if(Deck[botPillarSearch-k][botRowSearch]->GetOccupied())
+			{
+				break;
+			}
+			else if(!Deck[botPillarSearch-k][botRowSearch]->GetOccupied())
+			{
+				botUpSideMax++;
+			}
+		}
+		if(botPillarSearch-botDownSideMax==14)
+		{
+			botUpSideMax++;
+		}
+		botUpSideMax--;
+		GetBotUpSide = true;
+	}
+	return GetBotUpSide;
+}
+
 bool CTiles::GetBotDownSideMax()
 {
 	botDownSideMax = 0;
@@ -1558,6 +1599,36 @@ bool CTiles::GetBotRightSideMax()
 		GetBotRightSide = true;
 	}
 	return GetBotRightSide;
+}
+
+bool CTiles::GetBotLeftSideMax()
+{
+	botLeftSideMax = 0;
+	if(!Deck[botPillarSearch][botRowSearch-1]->GetOccupied()&&!Deck[botPillarSearch][botRowSearch+1]->GetOccupied())
+	{
+		for(int k=1;k<16;k++)
+		{
+			if(botRowSearch+k>14)
+			{
+				break;
+			}
+			else if(Deck[botPillarSearch][botRowSearch-k]->GetOccupied())
+			{
+				break;
+			}
+			else if(!Deck[botPillarSearch][botRowSearch-k]->GetOccupied())
+			{
+				botLeftSideMax++;
+			}
+		}
+		if(botRowSearch+botRightSideMax==14)
+		{
+			botLeftSideMax++;
+		}
+		botLeftSideMax--;
+		GetBotLeftSide = true;
+	}
+	return GetBotLeftSide;
 }
 
 bool CTiles::IsInTheVector(string passed_word, vector<string>& passed_vector)
@@ -1765,6 +1836,30 @@ void CTiles::InitBotHand(char passed_letter)
 	{
 		tileNumberb = 0;
 	}
+}
+
+void CTiles::forceBotHandRandomization()
+{
+	for(size_t k=0, size = keepBotHand.size(); k<size;k++)
+	{
+		TilesNumber.at(keepBotHand.at(k))=false;
+	}
+	keepBotHand.clear();
+	for(int j=0;j<7;j++)
+	{
+		randTileNbFound = true;
+		while(randTileNbFound)
+		{
+			randTileNb = GetAvailableTile(TilesNumber);
+			if(!IsInTheVectorb(randTileNb, OnDeck)&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, OnDeckForeva)&&!tiles[randTileNb]->GetisOndeck()&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, Swap))
+			{
+				TilesNumber.at(randTileNb)=true;
+				keepBotHand.push_back(randTileNb);
+				randTileNbFound = false;
+			}
+		}
+	}
+	cout<<"forced botHand randomization. "<<endl;
 }
 
 void CTiles::SetNewBotScore()

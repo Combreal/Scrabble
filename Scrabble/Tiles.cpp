@@ -1803,6 +1803,7 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 				if(!IsInTheVector(botTestChain, passed_WordsFound) && (botTestChain.at(0)==passed_letter)&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos)
 				{
 					passed_WordsFound.push_back(botTestChain);
+					epurateWordsFound(passed_WordsFound);
 				}
 			}
 		}
@@ -1903,6 +1904,7 @@ void CTiles::findwordz(vector<string>& passed_TransitHand, vector<string>& passe
 					if(!IsInTheVector(botTestChain, passed_WordsFound) && botTestChain.find(passed_letter) != std::string::npos&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos)
 					{
 						passed_WordsFound.push_back(botTestChain);
+						epurateWordsFound(passed_WordsFound);//counter the issue 2 same chars on word only one is displayed
 					}
 				}
 			}
@@ -2193,4 +2195,53 @@ string CTiles::retrieveWordFound(string passed_BotHand, string passed_word)
 		wordFound = passed_wordCopyb;
 	}
 	return wordFound;
+}
+
+int CTiles::GetIndice(vector<string>& passed_vector, string passed_word)
+{
+	int indice = 0;
+	for(size_t i=0, size = passed_vector.size();i<size;i++)
+	{
+		if(passed_vector.at(i).compare(passed_word) == 0)
+		{
+			indice = i;
+			break;
+		}
+	}
+	return indice;
+}
+
+void CTiles::epurateWordsFound(vector<string>& passed_vector)
+{
+	vector<char> charList;
+	vector<string> passed_vectorCopy;
+	passed_vectorCopy = passed_vector;
+	for(size_t i=0, size = passed_vector.size();i<size;i++)
+	{
+		charList.clear();
+		for(unsigned int j = 0; j<passed_vector.at(i).length(); j++)
+		{
+			if(IsInTheVectorc(passed_vector.at(i).at(j), charList))
+			{
+				passed_vectorCopy.erase(passed_vectorCopy.begin()+GetIndice(passed_vectorCopy, passed_vector.at(i)));
+				break;
+			}
+			charList.push_back(passed_vector.at(i).at(j));
+		}
+	}
+	passed_vector = passed_vectorCopy;
+}
+
+bool CTiles::IsInTheVectorc(char passed_char, vector<char>& passed_vector)
+{
+	bool isInTheVector=false;
+	for(size_t i=0, size=passed_vector.size(); i<size; ++i) 
+	{
+		if(passed_vector.at(i)==passed_char)
+		{
+			isInTheVector = true;
+			break;
+		}
+	}
+	return isInTheVector;
 }

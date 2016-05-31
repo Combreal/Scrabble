@@ -67,6 +67,7 @@ private:
 	std::vector<std::string> OrderedWordsFound;
 	bool IsInTheVector(std::string passed_word, std::vector<std::string>& passed_vector);
 	bool IsInTheVectorb(int passed_id, std::vector<int>& passed_vector);
+	bool IsInTheVectorc(char passed_char, std::vector<char>& passed_vector);
 	void FirstWordIsFromBot();
 	void findwords(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound, char passed_letter);
 	void findwordz(std::vector<std::string>& passed_TransitHand, std::vector<std::string>& passed_WordsFound, char passed_letter);
@@ -76,7 +77,9 @@ private:
 	int GetAvailableTile(std::map<int,bool>& passed_map);
 	int GetLodPosition(std::string passed_word, char passed_letter);
 	int randNoDoublon(int a, int b, std::vector<int>& passed_vector);
+	int GetIndice(std::vector<std::string>& passed_vector, std::string passed_word);
 	std::string retrieveWordFound(std::string passed_BotHand, std::string passed_word);
+	void epurateWordsFound(std::vector<std::string>& passed_vector);
 	void GetDeckPillarAndRow(int passed_witchPict);
 	bool GetBotUpSideMax();
 	bool GetBotDownSideMax();

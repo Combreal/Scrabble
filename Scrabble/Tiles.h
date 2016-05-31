@@ -54,13 +54,17 @@ private:
 	std::vector<int> BotHandb;
 	std::vector<int> BotHandc;
 	std::vector<int> keepBotHand;
+	std::vector<int> RandomNumber;
 	std::vector<int>::iterator it;
 	std::map<int,bool>::iterator itt;
 	std::vector<char> BotHandChars;
 	std::vector<char> Alpha;
 	std::vector<std::string> TransitHand;
 	std::vector<std::string> TransitHandJocker;
+	std::vector<std::string> TransitHandJockerLopedOff;
+	std::vector<std::string> TransitHandJockerShorter;
 	std::vector<std::string> WordsFound;
+	std::vector<std::string> OrderedWordsFound;
 	bool IsInTheVector(std::string passed_word, std::vector<std::string>& passed_vector);
 	bool IsInTheVectorb(int passed_id, std::vector<int>& passed_vector);
 	void FirstWordIsFromBot();
@@ -71,6 +75,8 @@ private:
 	char GetLetter(std::vector<char>& passed_vector);
 	int GetAvailableTile(std::map<int,bool>& passed_map);
 	int GetLodPosition(std::string passed_word, char passed_letter);
+	int randNoDoublon(int a, int b, std::vector<int>& passed_vector);
+	std::string retrieveWordFound(std::string passed_BotHand, std::string passed_word);
 	void GetDeckPillarAndRow(int passed_witchPict);
 	bool GetBotUpSideMax();
 	bool GetBotDownSideMax();
@@ -115,15 +121,15 @@ private:
 	int deckRow, deckPillar, horizontalFirst, horizontalLast, verticalFirst, verticalLast, botPillarSearch, botRowSearch, deadEndCounter;
 	int CxReloc, CyReloc, CxRelocb, CyRelocb, wichpict, tmpPillar, tmpRow, stayInPillarOrRow, tmpFirstPillar, tmpFirstRow, unusedTile;
 	int tmpTileX, tmpTileY, tmpSwapedTileNb, tmpSwap, tileNumberb, playerScoreb, machineScoreb, newScore, TNLopOffCounter, randTileNb;
-	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter;
+	int tmpLeftPillar, tmpLeftRow, tmpRightPillar, tmpRightRow, tmpUpPillar, tmpUpRow, tmpDownPillar, tmpDownRow, noWordCounter, botFirstWordcounter;
 	int botDownSideMax, botRightSideMax, newBotScore, botScoreb, horizontalBotFirst, horizontalBotLast, verticalBotFirst, verticalBotLast;
 	int botUpSideMax, botLeftSideMax, availableTile, randomKey, noWordCounterb, roll, lodPosition, firstCharBotWord, WordsFoundIndice;
 	bool jocker[2];
 	bool botJocker[2];
 	bool Follow, Lockwichpict, isClicked, swapon, putBackTile, IsOnDeck, handLock, playAlreadyClicked, quitCheckWordListLoop, handleBotJocker;
 	bool isPackedOnDeck, firsttile, firsttileafteraturn, secondtile, secondtileafteraturn, initBotHand, BotchosenDirection, quitCDLoop;
-	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff;
-	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot, initRetrieveWord, ctrlInit, randTileNbFound, deadEnd;
+	bool noTileMoved, play, dreplswap, initGetHand, initPictClicked, lockSeekWord, isAword, sameWord, initTNLopOff, initBTNLopOff, doubleJockers;
+	bool GetBotRightSide, GetBotDownSide, noWord, botPass, firstWordIsFromBot, initRetrieveWord, ctrlInit, randTileNbFound, deadEnd, tileNbAfterFirstWord;
 	bool isInTheVector, isInTheVectorb, randomizeBotHand, GetBotLeftSide, GetBotUpSide, wordCanBePlaced, goForBotDownSideNormal, goForBotRightSideNormal;
 };
 

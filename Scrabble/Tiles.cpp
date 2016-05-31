@@ -12,6 +12,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	wichpict = 0;
 	CxReloc=0, CyReloc=0;
 	deckRow=0, deckPillar = 0;
+	botFirstWordcounter = 0;
 	botDownSideMax=0, botRightSideMax = 0;
 	botUpSideMax=0, botLeftSideMax = 0;
 	botPillarSearch=0, botRowSearch = 0;
@@ -42,12 +43,15 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	tileNumbera = "93";
 	dictionaryPath = "data/dictionary/enDict.txt";
 	botHandConc = "";
+	word = "";
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	randTileNbFound = false;
+	tileNbAfterFirstWord = false;
 	ctrlInit = false;
 	quitCDLoop = false;
 	deadEnd = false;
 	noWord = false;
+	doubleJockers = false;
 	botPass = false;
 	noTileMoved = true;
 	handleBotJocker = false;
@@ -1188,13 +1192,17 @@ void CTiles::AiPlay()
 	//
 	//Place tiles on deck, keep track on OnDeckForEva
 	//Clean things up for next turn
+	if(!tileNbAfterFirstWord)
+	{
+		initBTNLopOff = false;
+	}
 	if(tileNumberb>7)
 	{
 		RandomizedOnDeckForeva = OnDeckForeva;
 		BotHandTransf.push_back(9999);
 		noWordCounter=0;
 		roll = rand() % 100 + 1;
-		if(roll<=10)
+		if(roll<=5)
 		{
 			botPass = true;
 			cout<<"Bot passed. "<<endl;
@@ -1303,7 +1311,7 @@ void CTiles::AiPlay()
 			}
 			tileNumberb = tileNumberb - (BotHand.size() - BotHandTransf.size()-1);//or WordsFound.at(0).size()-1
 		}
-		else if(initBTNLopOff&&!noWord&&!firstWordIsFromBot&&WordsFound.size()>0)
+		else if(initBTNLopOff&&!noWord&&!firstWordIsFromBot&&WordsFound.size()>0&&!tileNbAfterFirstWord)
 		{
 			for(size_t b = 0, sizeg = BotHand.size(); b < sizeg; ++b) 
 			{
@@ -1546,7 +1554,6 @@ void CTiles::FirstWordIsFromBot()
 			if(!IsInTheVectorb(randTileNb, OnDeck)&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, OnDeckForeva)&&!IsInTheVectorb(randTileNb, keepBotHand)&&!tiles[randTileNb]->GetisOndeck()&&!IsInTheVectorb(randTileNb, Hand)&&!IsInTheVectorb(randTileNb, Swap))
 			{
 				TilesNumber.at(randTileNb)=true;
-				//tileNumberb--;
 				BotHand.push_back(randTileNb);
 				BotHandChars.push_back(tiles[BotHand.at(i)]->GetLetter());
 				randTileNbFound = false;
@@ -1589,6 +1596,7 @@ void CTiles::FirstWordIsFromBot()
 					OnDeckForeva.push_back(BotHand.at(o));
 					BotHandb.push_back(BotHand.at(o));
 					BotHandTransf.push_back(BotHand.at(o));
+					botFirstWordcounter++;
 					break;
 				}
 			}
@@ -1612,7 +1620,8 @@ void CTiles::FirstWordIsFromBot()
 		}
 	}
 	keepBotHand = BotHand;
-	tileNumberb = tileNumberb - 7;
+	tileNumberb = tileNumberb - 7 - botFirstWordcounter;
+	tileNbAfterFirstWord = true;
 	initBotHand = false;
 }
 
@@ -1782,7 +1791,6 @@ bool CTiles::IsInTheVectorb(int passed_id, vector<int>& passed_vector)
 
 void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound, char passed_letter)
 {
-	bool passed_initVector = true;
 	ifstream file(dictionaryPath, ios::in);
 	if(file&&passed_TransitHand.size()>0)
 	{       
@@ -1792,50 +1800,9 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 			file>>botTestChain;
 			for(size_t i=0, size=passed_TransitHand.size(); i<size; ++i)
 			{
-				botJocker[0] = false;
-				botJocker[1] = false;
-				botJockerPos[0] = 0;
-				botJockerPos[1] = 0;
-				botWordCopy = passed_TransitHand.at(i);
-				for(int j=0;j<2;j++)
+				if(!IsInTheVector(botTestChain, passed_WordsFound) && (botTestChain.at(0)==passed_letter)&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos)
 				{
-					found = botWordCopy.find('_');
-					if(botWordCopy.find('_') != std::string::npos)
-					{
-						botJocker[j]=true;
-						botJockerPos[j]=found;
-						botWordCopy.erase(found, 1);
-					}
-				}
-				if(botJocker[0]&&!botJocker[1]&&!IsInTheVector(botTestChain, passed_WordsFound)&&(botTestChain.at(0)==passed_letter)&&botTestChain.size()>1)
-				{
-					if(botTestChain.size()==passed_TransitHand.at(i).size())
-					{
-						botTestChain.erase(jockerPos[0], 1);
-						if(botTestChain.compare(botWordCopy) == 0)
-						{
-							passed_WordsFound.push_back(botTestChain);
-						}
-					}
-				}
-				else if(botJocker[0]&&botJocker[1]&&!IsInTheVector(botTestChain, passed_WordsFound)&&(botTestChain.at(0)==passed_letter)&&botTestChain.size()>1)
-				{
-					if(botTestChain.size()==passed_TransitHand.at(i).size())
-					{
-						botTestChain.erase(jockerPos[0], 1);
-						botTestChain.erase(jockerPos[1], 1);
-						if(botTestChain.compare(botWordCopy) == 0)
-						{
-							passed_WordsFound.push_back(botTestChain);
-						}
-					}
-				}
-				else if((botTestChain.at(0)==passed_letter)&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos && botTestChain!="i" && botTestChain!="a")//&&testChain.size()>2 //&& !passed_initVector 
-				{
-					if(!IsInTheVector(botTestChain, passed_WordsFound))
-					{
-						passed_WordsFound.push_back(botTestChain);
-					}
+					passed_WordsFound.push_back(botTestChain);
 				}
 			}
 		}
@@ -1849,65 +1816,102 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 
 void CTiles::findwordz(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound, char passed_letter)
 {
-	bool passed_initVector = true;
 	handleBotJocker = false;
-	TransitHandJocker = passed_TransitHand;
 	if(botHandConc.find('_') != std::string::npos)
 	{
-		for(size_t k=0, size=TransitHandJocker.size();k<size;k++)
+		cout<<"joker(s) found. bothand : "<<botHandConc<<endl;
+		string checkSecondJocker = botHandConc;
+		for(size_t s=0, sizes=checkSecondJocker.size();s<sizes;s++)
 		{
-			for(int m=0;m<26;m++)
+			size_t found = checkSecondJocker.find('_');
+			if(found!=string::npos)
+			{
+				checkSecondJocker.erase(checkSecondJocker.begin()+found);
+				if(checkSecondJocker.find('_') != std::string::npos)
+				{
+					cout<<"no luck bot had double jockers..."<<endl;
+					doubleJockers = true;
+					forceBotHandRandomization();
+				}
+			}
+		}
+		if(!doubleJockers)
+		{
+			cout<<"Jocker. "<<endl;
+			for(size_t k=0, size=TransitHand.size();k<size;k++)
 			{
 				fillAlpha(Alpha);
-				if(m==0)
+				for(int m=0;m<26;m++)
 				{
-					replace(TransitHandJocker.at(k).begin(),TransitHandJocker.at(k).end(), '_', GetLetter(Alpha));
-				}
-				else
-				{
-					string newString = TransitHandJocker.at(k);
+					string newString = TransitHand.at(k);
 					replace(newString.begin(),newString.end(), '_', GetLetter(Alpha));
-					TransitHandJocker.push_back(newString);
-				}
-			}
-		}
-		handleBotJocker = true;
-	}
-	ifstream file(dictionaryPath, ios::in);
-	if(file&&passed_TransitHand.size()>0)
-	{       
-		string botTestChain;		
-		while(!file.eof())
-		{
-			file>>botTestChain;
-			if(handleBotJocker)
-			{
-				for(size_t i=0, sizeb=TransitHandJocker.size(); i<sizeb; ++i)
-				{
-					if(!IsInTheVector(botTestChain, passed_WordsFound) && passed_TransitHand.at(i).find(botTestChain) != string::npos && botTestChain.find(passed_letter) != std::string::npos&&botTestChain.size()>1)
+					if(!IsInTheVector(newString, TransitHandJockerLopedOff))
 					{
-						//get back wich string from passed_TransitHand matchs
-						//and swap the appropriate letter on botTestChain with the jocker symbol ( '_' )
-						passed_WordsFound.push_back(botTestChain);
+						TransitHandJockerLopedOff.push_back(newString);
 					}
 				}
 			}
-			else if(!handleBotJocker)
+			TransitHandJocker = TransitHandJockerLopedOff;
+			for(int i=0; i<32; ++i) //for(size_t i=0, sizeb=TransitHandJocker.size(); i<sizeb; ++i) impossible because 1k6 is too much to process when comparing with dict words
 			{
-				for(size_t n=0, sizea=passed_TransitHand.size(); n<sizea; ++n)
+				TransitHandJockerShorter.push_back(TransitHandJockerLopedOff.at(randNoDoublon(0, 1662, RandomNumber)));
+			}
+			ifstream file(dictionaryPath, ios::in);
+			if(file&&TransitHandJockerShorter.size()>0)
+			{       
+				string botTestChain;		
+				while(!file.eof())
 				{
-					if(!IsInTheVector(botTestChain, passed_WordsFound)&&botTestChain.find(passed_letter) != std::string::npos && botTestChain.size()>1 && passed_TransitHand.at(n).find(botTestChain) != string::npos)
+					file>>botTestChain;
+					for(size_t d=0, sizeb=TransitHandJockerShorter.size(); d<sizeb; ++d)
 					{
-						passed_WordsFound.push_back(botTestChain);
+						if(!IsInTheVector(botTestChain, WordsFound) && TransitHandJockerShorter.at(d).find(botTestChain) != string::npos && botTestChain.find(passed_letter) != std::string::npos && botTestChain.size()>1)
+						{
+							WordsFound.push_back(botTestChain);
+						}
 					}
 				}
+				file.close();
 			}
+			else
+			{
+				cerr << "Can't open the file !" << endl;
+			}
+			for(size_t e=0, sizee=WordsFound.size(); e<sizee; ++e) 
+			{
+				OrderedWordsFound.push_back(retrieveWordFound(botHandConc, WordsFound.at(e)));
+			}
+			WordsFound = OrderedWordsFound;
+			RandomNumber.clear();
+			OrderedWordsFound.clear();
+			TransitHandJocker.clear();
+			TransitHandJockerShorter.clear();
+			TransitHandJockerLopedOff.clear();
 		}
-		file.close();
 	}
 	else
 	{
-		cerr << "Can't open the file !" << endl;
+		ifstream file(dictionaryPath, ios::in);
+		if(file&&passed_TransitHand.size()>0)
+		{       
+			string botTestChain;		
+			while(! file.eof())
+			{
+				file>>botTestChain;
+				for(size_t i=0, size=passed_TransitHand.size(); i<size; ++i)
+				{
+					if(!IsInTheVector(botTestChain, passed_WordsFound) && botTestChain.find(passed_letter) != std::string::npos&&botTestChain.size()>1 && passed_TransitHand.at(i).find(botTestChain) != string::npos)
+					{
+						passed_WordsFound.push_back(botTestChain);
+					}
+				}
+			}
+			file.close();
+		}
+		else
+		{
+			cerr << "Can't open the file !" << endl;
+		}
 	}
 }
 
@@ -1995,6 +1999,7 @@ void CTiles::InitBotHand(char passed_letter)
 		}
 		else if(!initBotHand && randomizeBotHand)
 		{
+			//tileNumberb = tileNumberb + keepBotHand.size()-7;
 			for(size_t k=0, size = keepBotHand.size(); k<size;k++)
 			{
 				TilesNumber.at(keepBotHand.at(k))=false;
@@ -2134,4 +2139,58 @@ void CTiles::SetNewBotScore()
 			}
 		}
 	}
+}
+
+int CTiles::randNoDoublon(int a, int b, vector<int>& passed_vector)//b+1 when using the arg
+{
+	bool isInVector=false;
+	bool numberFound = false;
+	int randomNumber = 0;
+	int number = 0;
+	while(!numberFound)
+	{
+		isInVector=false;
+		number = rand()%(b-a) +a;
+		for(size_t i=0, size=passed_vector.size(); i<size; ++i) 
+		{
+			if(passed_vector.at(i)==number)
+			{
+				isInVector = true;
+				break;
+			}
+		}
+		if(!isInVector)
+		{
+			passed_vector.push_back(number);
+			randomNumber = number;
+			numberFound = true;
+		}
+	}
+	return randomNumber;
+}
+
+string CTiles::retrieveWordFound(string passed_BotHand, string passed_word)
+{
+	string wordFound = passed_word;
+	string passed_BotHandCopy = passed_BotHand;
+	string passed_wordCopy = passed_word;
+	string passed_wordCopyb = passed_word;
+	for(size_t i=0, size=passed_BotHandCopy.size();i<size;i++)
+	{
+		size_t found = passed_wordCopy.find(passed_BotHandCopy.at(i));
+		if(found!=string::npos)
+		{
+			passed_wordCopy.erase(passed_wordCopy.begin()+found);
+		}
+	}
+	if(passed_wordCopy.size()==0)
+	{
+		wordFound = passed_word;
+	}
+	else if(passed_wordCopy.size()==1)
+	{
+		replace(passed_wordCopyb.begin(),passed_wordCopyb.end(), passed_wordCopy.at(0), '_');
+		wordFound = passed_wordCopyb;
+	}
+	return wordFound;
 }

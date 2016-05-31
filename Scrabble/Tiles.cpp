@@ -24,20 +24,24 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	randTileNb = 0;
 	newBotScore = 0;
 	botScoreb = 0;
+	lodPosition = 0;
 	noWordCounter = 0;
 	noWordCounterb = 0;
 	roll = 0;
+	WordsFoundIndice = 0;
 	TNLopOffCounter = 0;
 	unusedTile = 0;
 	availableTile = 0;
 	randomKey = 0;
 	found=0, botFound = 0;
+	firstCharBotWord = 0;
 	tileNumberb=93, playerScoreb=0, machineScoreb = 0;
 	newScore = 0;
 	playerScorea = "0";
 	machineScorea = "0";
 	tileNumbera = "93";
 	dictionaryPath = "data/dictionary/enDict.txt";
+	botHandConc = "";
 	tmpLeftPillar=-1, tmpLeftRow=-1, tmpRightPillar=-1, tmpRightRow=-1, tmpUpPillar=-1, tmpUpRow=-1, tmpDownPillar=-1, tmpDownRow = -1;
 	randTileNbFound = false;
 	ctrlInit = false;
@@ -46,8 +50,10 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	noWord = false;
 	botPass = false;
 	noTileMoved = true;
+	handleBotJocker = false;
 	randomizeBotHand = false;
 	initRetrieveWord = true;
+	wordCanBePlaced = false;
 	firstWordIsFromBot = false;
 	GetBotRightSide=false, GetBotDownSide=false;
 	GetBotLeftSide=false, GetBotUpSide=false;
@@ -87,6 +93,7 @@ CTiles::CTiles(bool *passed_SwapLoop, int *passed_MouseX, int *passed_MouseY, CS
 	initTNLopOff = true;
 	initBTNLopOff = true;
 	quitCheckWordListLoop = false;
+	goForBotDownSideNormal=false, goForBotRightSideNormal = false;
 	PlayerScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", playerScorea, 18, 0, 0, 0, 0, 755, 11, 15, 25);//735 for >99 744 for>9 755 for<10
 	MachineScore = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", machineScorea, 18, 0, 0, 0, 0, 755, 45, 15, 25);
 	TileNumber = new CTextSprite(csdl_setup, csdl_setup->GetRenderer(), "data/font/LucidaSansRegular.ttf", tileNumbera, 14, 0, 0, 0, 0, 639, 94, 11, 15); //631 if tileCounter>9
@@ -1236,13 +1243,49 @@ void CTiles::AiPlay()
 				noWordCounter++;
 			}
 		}
+		if(!noWord &&!botPass&&!firstWordIsFromBot)
+		{
+			InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+			BotHandb = BotHand;
+			string builtChars(BotHandChars.begin(), BotHandChars.end());
+			botHandConc=builtChars;
+			TransitHand.push_back(builtChars);
+			for(int i=0;i<63;i++)
+			{
+				quitCheckWordListLoop = false;
+				while(!quitCheckWordListLoop)
+				{
+					random_shuffle(BotHandChars.begin(), BotHandChars.end());
+					string builtChars(BotHandChars.begin(), BotHandChars.end());
+					if(!IsInTheVector(builtChars, TransitHand))
+					{
+						TransitHand.push_back(builtChars);
+						quitCheckWordListLoop = true;
+					}
+				}
+			}	
+		}
 		if(BotchosenDirection&&!noWord &&!botPass&&!firstWordIsFromBot)
 		{
-			botDownSideNormal();
+			if(botUpSideMax>2&&botDownSideMax>2)
+			{
+				botDownSideExtended();
+			}
+			else if(goForBotDownSideNormal)
+			{
+				botDownSideNormal();
+			}
 		}
 		else if(!BotchosenDirection&&!noWord &&!botPass&&!firstWordIsFromBot)
 		{
-			botRightSideNormal();
+			if(botLeftSideMax>2&&botLeftSideMax>2)
+			{
+				botRightSideExtended();
+			}
+			else if(goForBotRightSideNormal)
+			{
+				botRightSideNormal();
+			}
 		}
 		if(!botPass&&!firstWordIsFromBot&&WordsFound.size()>0)
 		{
@@ -1283,6 +1326,7 @@ void CTiles::AiPlay()
 		}
 		quitCheckWordListLoop = false;
 		GetBotRightSide=false, GetBotDownSide=false;
+		goForBotDownSideNormal=false, goForBotRightSideNormal = false;
 		noWord = false;
 		botPass = false;
 		firstWordIsFromBot = false;
@@ -1303,24 +1347,6 @@ void CTiles::AiPlay()
 
 void CTiles::botDownSideNormal()
 {
-	InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-	BotHandb = BotHand;
-	string builtChars(BotHandChars.begin(), BotHandChars.end());
-	TransitHand.push_back(builtChars);
-	for(int i=0;i<63;i++)
-	{
-		quitCheckWordListLoop = false;
-		while(!quitCheckWordListLoop)
-		{
-			random_shuffle(BotHandChars.begin(), BotHandChars.end());
-			string builtChars(BotHandChars.begin(), BotHandChars.end());
-			if(!IsInTheVector(builtChars, TransitHand))
-			{
-				TransitHand.push_back(builtChars);
-				quitCheckWordListLoop = true;
-			}
-		}
-	}
 	findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
 	random_shuffle(WordsFound.begin(), WordsFound.end());
 	if(WordsFound.size()>0)
@@ -1360,24 +1386,6 @@ void CTiles::botDownSideNormal()
 
 void CTiles::botRightSideNormal()
 {
-	InitBotHand(tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
-	BotHandb = BotHand;
-	string builtChars(BotHandChars.begin(), BotHandChars.end());
-	TransitHand.push_back(builtChars);
-	for(int j=0;j<63;j++)
-	{
-		quitCheckWordListLoop = false;
-		while(!quitCheckWordListLoop)
-		{
-			random_shuffle(BotHandChars.begin(), BotHandChars.end());
-			string builtChars(BotHandChars.begin(), BotHandChars.end());
-			if(!IsInTheVector(builtChars, TransitHand))
-			{
-				TransitHand.push_back(builtChars);
-				quitCheckWordListLoop = true;
-			}
-		}
-	}
 	findwords(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
 	random_shuffle(WordsFound.begin(), WordsFound.end());
 	if(WordsFound.size()>0)
@@ -1412,6 +1420,119 @@ void CTiles::botRightSideNormal()
 		horizontalBotLast = horizontalBotFirst+WordsFound.at(0).size()-1;
 		verticalBotFirst = botPillarSearch;
 	}
+}
+
+void CTiles::botDownSideExtended()
+{
+	findwordz(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	random_shuffle(WordsFound.begin(), WordsFound.end());
+	wordCanBePlaced = false;
+	if(WordsFound.size()>0)
+	{
+		while(!wordCanBePlaced)
+		{
+			for(size_t w=0, size=WordsFound.size();w<size;w++)
+			{
+				WordsFoundIndice = w;
+				firstCharBotWord=GetLodPosition(WordsFound.at(w), tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+				if(firstCharBotWord-1<botUpSideMax && WordsFound.at(w).size()-(size_t)firstCharBotWord<(size_t)botDownSideMax)
+				{
+					cout<<"Word found extended: "<<WordsFound.at(w)<<endl;
+					for(size_t l=0, sizea=WordsFound.at(w).size() ;l<sizea;l++)
+					{
+						for(size_t n=0, sizem=BotHand.size();n<sizem;n++)
+						{
+							if(WordsFound.at(w).at(l)==tiles[BotHand.at(n)]->GetLetter()&&!Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->GetOccupied()&&!IsInTheVectorb(BotHand.at(n), BotHandTransf))//if things goes wrong, make a vector to reorder BotHand
+							{
+								tiles[BotHand.at(n)]->SetPosition(Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->GetX(),Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->GetY());
+								tiles[BotHand.at(n)]->SetisOndeck(true);
+								cout<<"BotHand.at(n) : "<<BotHand.at(n)<<endl;
+								Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->SetLetterCoefficient(tiles[BotHand.at(n)]->GetPoints());
+								Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->SetLetter(tiles[BotHand.at(n)]->GetLetter());
+								Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->SetOccupied(true);
+								Deck[botPillarSearch+l-firstCharBotWord][botRowSearch]->SetTileId(BotHand.at(n));
+								OnDeckForeva.push_back(BotHand.at(n));
+								BotHandTransf.push_back(BotHand.at(n));
+								break;
+							}
+						}
+					}
+					wordCanBePlaced = true;
+					break;
+				}
+				else if(w==WordsFound.size()-1)
+				{
+					goForBotDownSideNormal = true;
+					wordCanBePlaced = true;
+				}
+			}
+		}
+		verticalBotFirst = botPillarSearch-firstCharBotWord;
+		verticalBotLast = verticalBotFirst+WordsFound.at(WordsFoundIndice).size()-1;
+		horizontalBotFirst = botRowSearch;
+	}
+}
+
+void CTiles::botRightSideExtended()
+{
+	findwordz(TransitHand, WordsFound, tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+	random_shuffle(WordsFound.begin(), WordsFound.end());
+	wordCanBePlaced = false;
+	if(WordsFound.size()>0)
+	{
+		while(!wordCanBePlaced)
+		{
+			for(size_t v=0, size=WordsFound.size();v<size;v++)
+			{
+				WordsFoundIndice = v;
+				firstCharBotWord=GetLodPosition(WordsFound.at(v), tiles[RandomizedOnDeckForeva.at(0)]->GetLetter());
+				if(firstCharBotWord-1<botLeftSideMax && WordsFound.at(v).size()-(size_t)firstCharBotWord<(size_t)botRightSideMax)
+				{
+					cout<<"Word found extended: "<<WordsFound.at(v)<<endl;
+					for(size_t m=0, sizeb=WordsFound.at(v).size();m<sizeb;m++)
+					{
+						for(size_t o=0, sizen=BotHand.size();o<sizen;o++)
+						{
+							if(WordsFound.at(v).at(m)==tiles[BotHand.at(o)]->GetLetter()&&!Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->GetOccupied()&&!IsInTheVectorb(BotHand.at(o), BotHandTransf))
+							{
+								tiles[BotHand.at(o)]->SetPosition(Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->GetX(),Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->GetY());
+								tiles[BotHand.at(o)]->SetisOndeck(true);
+								Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->SetLetterCoefficient(tiles[BotHand.at(o)]->GetPoints());
+								Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->SetLetter(tiles[BotHand.at(o)]->GetLetter());
+								Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->SetOccupied(true);
+								Deck[botPillarSearch][botRowSearch+m-firstCharBotWord]->SetTileId(BotHand.at(o));
+								OnDeckForeva.push_back(BotHand.at(o));
+								BotHandTransf.push_back(BotHand.at(o));
+								break;
+							}
+						}
+					}
+					wordCanBePlaced = true;
+					break;
+				}
+				else if(v==WordsFound.size()-1)
+				{
+					goForBotDownSideNormal = true;
+					wordCanBePlaced = true;
+				}
+			}
+		}
+		horizontalBotFirst = botRowSearch-firstCharBotWord;
+		horizontalBotLast = horizontalBotFirst+WordsFound.at(WordsFoundIndice).size()-1;
+		verticalBotFirst = botPillarSearch;
+	}
+}
+
+int CTiles::GetLodPosition(string passed_word, char passed_letter)
+{
+	for(string::size_type i = 0; i < passed_word.length(); ++i)
+	{
+		if(passed_word[i]==passed_letter)
+		{
+			lodPosition = i;
+		}
+	}
+	return lodPosition;
 }
 
 void CTiles::FirstWordIsFromBot()
@@ -1724,6 +1845,92 @@ void CTiles::findwords(vector<string>& passed_TransitHand, vector<string>& passe
 	{
 		cerr << "Can't open the file !" << endl;
 	}
+}
+
+void CTiles::findwordz(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound, char passed_letter)
+{
+	bool passed_initVector = true;
+	handleBotJocker = false;
+	TransitHandJocker = passed_TransitHand;
+	if(botHandConc.find('_') != std::string::npos)
+	{
+		for(size_t k=0, size=TransitHandJocker.size();k<size;k++)
+		{
+			for(int m=0;m<26;m++)
+			{
+				fillAlpha(Alpha);
+				if(m==0)
+				{
+					replace(TransitHandJocker.at(k).begin(),TransitHandJocker.at(k).end(), '_', GetLetter(Alpha));
+				}
+				else
+				{
+					string newString = TransitHandJocker.at(k);
+					replace(newString.begin(),newString.end(), '_', GetLetter(Alpha));
+					TransitHandJocker.push_back(newString);
+				}
+			}
+		}
+		handleBotJocker = true;
+	}
+	ifstream file(dictionaryPath, ios::in);
+	if(file&&passed_TransitHand.size()>0)
+	{       
+		string botTestChain;		
+		while(!file.eof())
+		{
+			file>>botTestChain;
+			if(handleBotJocker)
+			{
+				for(size_t i=0, sizeb=TransitHandJocker.size(); i<sizeb; ++i)
+				{
+					if(!IsInTheVector(botTestChain, passed_WordsFound) && passed_TransitHand.at(i).find(botTestChain) != string::npos && botTestChain.find(passed_letter) != std::string::npos&&botTestChain.size()>1)
+					{
+						//get back wich string from passed_TransitHand matchs
+						//and swap the appropriate letter on botTestChain with the jocker symbol ( '_' )
+						passed_WordsFound.push_back(botTestChain);
+					}
+				}
+			}
+			else if(!handleBotJocker)
+			{
+				for(size_t n=0, sizea=passed_TransitHand.size(); n<sizea; ++n)
+				{
+					if(!IsInTheVector(botTestChain, passed_WordsFound)&&botTestChain.find(passed_letter) != std::string::npos && botTestChain.size()>1 && passed_TransitHand.at(n).find(botTestChain) != string::npos)
+					{
+						passed_WordsFound.push_back(botTestChain);
+					}
+				}
+			}
+		}
+		file.close();
+	}
+	else
+	{
+		cerr << "Can't open the file !" << endl;
+	}
+}
+
+void CTiles::fillAlpha(vector<char>& passed_vector)
+{
+	passed_vector.clear();
+	char letter='a';
+	while(letter<='z')
+	{
+		passed_vector.push_back(letter);
+		letter++;
+	}
+}
+
+char CTiles::GetLetter(vector<char>& passed_vector)
+{
+	char returnedLetter='\0';
+	if(passed_vector.size()>0)
+	{
+		returnedLetter = passed_vector.at(0);
+		passed_vector.erase(passed_vector.begin());
+	}
+	return returnedLetter;
 }
 
 void CTiles::findword(vector<string>& passed_TransitHand, vector<string>& passed_WordsFound)

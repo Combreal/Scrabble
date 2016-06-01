@@ -9,4 +9,4 @@ I am trying to make it as much realistic as possible so the final release should
 
 All the pictures were made by me with Gimp.
 
-I might make it avaible for smartphones, keeping it c++ and using Necessitas once i will get a decent release.
+I might make it avaible for smartphones, keeping it c++ and using Necessitas and/or push it as a network application once i will get a decent release.
